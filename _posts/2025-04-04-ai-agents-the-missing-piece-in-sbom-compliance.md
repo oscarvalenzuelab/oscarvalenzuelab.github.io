@@ -5,7 +5,7 @@ title:  "AI Agents: The Missing Piece in SBOM Compliance"
 author: oscar
 categories: [ oss, security, compliance, supplychain, ai, n8n, sbom ]
 tags: [sbom, compliance, oss, supplychain, openchain, ai, n8n]
-image: images/posts/sbom.png
+image: images/posts/agenticai_sboms.png
 description: "Taming the SBOM Chaos: Using AI Agents to Audit SBOMs for OSS Compliance"
 featured: true
 comments: false
@@ -57,6 +57,11 @@ These aren’t just “nice to have.” They’re the foundation. Without them, 
 So instead of building tools overloaded with underdeveloped features (suffering from 'Swiss Army knife' syndrome), we need to focus on building and maintaining strong data feeds of knowledge. These should come from people who know open source compliance, like compliance engineers, lawyers, and auditors, who have done the work and been in the trenches.
 
 The better the data, the better the agent. That’s what makes the difference. Pioneering organizations like [ScanOSS](https://www.scanoss.com/), [NexB](https://nexb.com/), and [Software Heritage](https://www.softwareheritage.org/) understand this. They lead the way by offering the curated knowledge and data feeds crucial for effective compliance. This foundational work will fuel the next wave of automation driven by AI.
+
+Other organizations like OpenSSF, ClearlyDefined, and Deps.dev offer data sources to address security and compliance information.
+
+
+
 
 ## Final thought
 AI won’t replace compliance engineers but will change how we work. Instead of spending hours looking for missing package metadata, checking GitHub for licenses, reading reports, or fixing bad SBOMs, we’ll design systems that do most of the heavy lifting for us. We’ll focus on the decisions that matter, and we’ll train agents to handle the rest.
