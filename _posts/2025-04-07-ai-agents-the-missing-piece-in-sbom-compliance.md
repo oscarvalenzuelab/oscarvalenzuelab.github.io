@@ -1,6 +1,6 @@
 ---
 layout: post
-permalink: 2025/04/ai-agents-the-missing-piece-in-sbom-compliance.html
+permalink: /2025/04/ai-agents-the-missing-piece-in-sbom-compliance.html
 title:  "AI Agents: The Missing Piece in SBOM Compliance"
 author: oscar
 categories: [ oss, security, compliance, supplychain, ai, n8n, sbom ]
