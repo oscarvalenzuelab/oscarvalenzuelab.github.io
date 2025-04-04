@@ -7,7 +7,7 @@ categories: [ oss, security, compliance, supplychain, ai, n8n, sbom ]
 tags: [sbom, compliance, oss, supplychain, openchain, ai, n8n]
 image: images/posts/sbom.png
 description: "Taming the SBOM Chaos: Using AI Agents to Audit SBOMs for OSS Compliance"
-featured: false
+featured: true
 comments: false
 ---
 
