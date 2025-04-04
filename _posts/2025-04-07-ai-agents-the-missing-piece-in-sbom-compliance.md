@@ -11,7 +11,7 @@ featured: false
 comments: false
 ---
 
-Today, I gave a talk called “Taming the SBOM Chaos: Using AI Agents to Audit SBOMs for OSS Compliance.” The slides and materials are on my GitHub account [https://github.com/oscarvalenzuelab/sbom_analysis_using_agentic].
+Today, I gave a talk called “Taming the SBOM Chaos: Using AI Agents to Audit SBOMs for OSS Compliance.” The slides and materials are on my [GitHub account](https://github.com/oscarvalenzuelab/sbom_analysis_using_agentic).
 
 As Software Bill of Materials (SBOM) adoption grows, so does the complexity of managing, validating, and ensuring compliance with evolving regulatory frameworks. Many companies struggle with these challenges due to a lack of specialized in-house Subject Matter Experts (SMEs). My talk explored how AI-powered workflows, leveraging specialized models and OpenData APIs, can streamline compliance and audits. Attendees gained insights into how AI agents can assist in automating SBOM analysis, reducing human workload, and enhancing compliance strategies in an increasingly regulated software landscape.
 
