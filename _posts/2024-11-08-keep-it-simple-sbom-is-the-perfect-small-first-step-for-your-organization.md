@@ -7,7 +7,7 @@ categories: [ oss, securty, compliance, supplychain, openchain ]
 tags: [sbom, compliance, oss, supplychain, openchain]
 image: images/posts/small_feet.png
 description: "The 'keep it simple SBoM' is the perfect small first step for your organization."
-featured: false
+featured: true
 comments: false
 ---
 
