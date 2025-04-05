@@ -13,11 +13,11 @@ comments: false
 
 Following my previous post, I want to expand on the topic with some ideas for data feeds that support open source compliance audits and risk assessments when using an Agentic AI approach. These resources are available today, and I’ve had the chance to test and demonstrate them in a recent talk.
 
-## ScanOSS
+## SCANOSS / Software Transparency Foundation
 
-ScanOSS provides an open scanning engine and a public API that connects to the Open Source Software Knowledge Base (OSSKB). This system uses code fingerprints to identify code components, even at the snippet level. In addition to the main scanning API, ScanOSS offers specialized open datasets focused on regulatory and legal risks, including the *Crypto Algorithms Open Dataset* and the *Geo-Provenance dataset*.
+The Software Transparency Foundation offers a public API that connects to the Open Source Software Knowledge Base (OSSKB), which is produced by SCANOSS and licensed through the STF for public use. This system uses code fingerprints to identify code components, even at the snippet level. In addition to the main scanning API, SCANOSS offers specialized open datasets focused on regulatory and legal risks, including the *Crypto Algorithms Open Dataset* and the *Geo-Provenance dataset*.
 
-Key data provided by ScanOSS includes:
+Key data provided by SCANOSS includes:
 
 * Identified component identifiers (e.g., `PURLs`) from code fingerprint matches
 * Detected licenses associated with the identified code
