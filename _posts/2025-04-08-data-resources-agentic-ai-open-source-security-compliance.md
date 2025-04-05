@@ -15,7 +15,7 @@ Following my previous post, I want to expand on the topic with some ideas for da
 
 ## SCANOSS / Software Transparency Foundation
 
-The Software Transparency Foundation offers a public API that connects to the Open Source Software Knowledge Base (OSSKB), which is produced by SCANOSS and licensed through the STF for public use. This system uses code fingerprints to identify code components, even at the snippet level. In addition to the main scanning API, SCANOSS offers specialized open datasets focused on regulatory and legal risks, including the *Crypto Algorithms Open Dataset* and the *Geo-Provenance dataset*.
+The [Software Transparency Foundation](https://www.softwaretransparency.org/) offers a public [API](https://docs.osskb.org/) that connects to the Open Source Software Knowledge Base (OSSKB), which is produced by SCANOSS and licensed through the STF for public use. This system uses code fingerprints to identify code components, even at the snippet level. In addition to the main scanning API, SCANOSS offers specialized open datasets focused on regulatory and legal risks, including the [*Crypto Algorithms Open Dataset*](https://github.com/scanoss/crypto_algorithms_open_dataset) and the [*Geo-Provenance dataset*](https://www.scanoss.com/post/understanding-the-geo-provenance-dataset).
 
 Key data provided by SCANOSS includes:
 
@@ -29,10 +29,10 @@ This data enables agents to detect reused open source code, verify license attri
 
 ## NexB / AboutCode
 
-The NexB / AboutCode initiative encompasses several open datasets, tools, and APIs designed for in-depth analysis of software components concerning licenses, security posture, and provenance. Key offerings include:
+The NexB / [AboutCode](https://aboutcode.org/) initiative encompasses several open datasets, tools, and APIs designed for in-depth analysis of software components concerning licenses, security posture, and provenance. Key offerings include:
 
-* ScanCode.io, a self-hosted service with a RESTful API for scanning codebases
-* VulnerableCode, a public API that maps open source packages to known vulnerabilities
+* [ScanCode.io](https://github.com/aboutcode-org/scancode.io/), a self-hosted service with a RESTful API for scanning codebases
+* [VulnerableCode](https://public.vulnerablecode.io/), a public API that maps open source packages to known vulnerabilities
 * [ScanCode LicenseDB](https://github.com/aboutcode-org/scancode-licensedb), a comprehensive license database hosted on GitHub
 
 These tools provide valuable data, including:
@@ -45,7 +45,7 @@ Agents can leverage these tools to automate large-scale code scanning within CI/
 
 ## ClearlyDefined
 
-ClearlyDefined is a community-driven effort focused on aggregating and curating licensing and security metadata for open source packages. This information is available via a public REST `API`, offering structured data across many popular ecosystems (`npm`, `Maven`, `PyPI`, `NuGet`, etc.).
+[ClearlyDefined](https://clearlydefined.io/) is a community-driven effort focused on aggregating and curating licensing and security metadata for open source packages. This information is available via a public [API](https://api.clearlydefined.io/definitions/), offering structured data across many popular ecosystems (`npm`, `Maven`, `PyPI`, `NuGet`, etc.).
 
 The data includes:
 
@@ -60,7 +60,7 @@ The ClearlyDefined project is key in enriching SBOMs and compliance workflows by
 
 ## deps.dev (Open Source Insights by Google)
 
-deps.dev (Open Source Insights by Google) provides structured metadata and dependency information for software packages across significant ecosystems, including `npm`, `Maven`, `PyPI`, `Go`, and `Rust`. Its public `API` returns comprehensive metadata such as:
+[deps.dev](https://deps.dev/) (Open Source Insights by Google) provides structured metadata and dependency information for software packages across significant ecosystems, including `npm`, `Maven`, `PyPI`, `Go`, and `Rust`. Its public [API](https://docs.deps.dev/api/v3/) returns comprehensive metadata such as:
 
 * Complete dependency graphs, including direct and transitive relationships
 * Known vulnerabilities from the OSV database, mapped to affected version ranges
@@ -73,7 +73,7 @@ This service helps agents analyze how dependencies are interconnected, track the
 
 ## OpenSSF Security Scorecards
 
-OpenSSF Security Scorecards is a project by the Open Source Security Foundation that automatically evaluates open source repositories against security best practices. It assigns numeric scores to a set of defined checks, and makes results available through a public `API`.
+[OpenSSF Security Scorecards](https://openssf.org/projects/scorecard/) is a project by the Open Source Security Foundation that automatically evaluates open source repositories against security best practices. It assigns numeric scores to a set of defined checks, and makes results available through a public [API](https://api.securityscorecards.dev/).
 
 The system evaluates aspects such as:
 
