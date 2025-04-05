@@ -27,6 +27,16 @@ Key data provided by SCANOSS includes:
 
 This data enables agents to detect reused open source code, verify license attribution, trace code origins, identify components that might require export licenses due to cryptography, and flag software sourced from regions under trade restrictions or subject to data regulations.
 
+## Software Heritage
+Software Heritage is an open, non-profit initiative maintaining the world’s largest public archive of source code. Its mission of collecting and preserving all publicly available software makes it a powerful resource for compliance and cybersecurity. By offering a rich API and persistent identifiers (SWHIDs) for every piece of code, Software Heritage enables agentic systems to verify code provenance, integrity, and traceability at scale. In practice, an AI agent can leverage Software Heritage in several ways to bolster open source compliance and security:
+
+* Archive Verification: Agents can quickly check if a given source code release or package (e.g., a tarball) is already archived in Software Heritage’s database. This enables use cases like using the archived version for source compliance instead of publishing redundant tarballs.
+* Verify Modifications: Internal forks from open-source packages represent incremental technical debt due to cherry-picking changes when the software needs to be updated to a more recent upstream version, which is still often necessary (at least temporarily). Forks also introduce compliance and IP risks. Software Heritage's API and scanners allow agents to identify whether a local fork has been modified and where those modifications were introduced.
+* License Files Dataset: Software Heritage has built the largest dataset of licenses from all the archived projects, a valuable resource for benchmarking compliance tooling and training AI on license generation.
+
+Software Heritage’s archival infrastructure and identifiers ultimately empower a more transparent and secure open-source supply chain. By integrating SWH into their workflows, agent-based systems gain a dependable memory: they can detect unrecorded code, validate integrity through immutable hashes, and link to historical versions for context or legal compliance.
+
+
 ## AboutCode
 
 The [AboutCode](https://aboutcode.org/) initiative encompasses several open datasets, tools, and APIs designed for in-depth analysis of software components concerning licenses, security posture, and provenance. Their key offerings include:
