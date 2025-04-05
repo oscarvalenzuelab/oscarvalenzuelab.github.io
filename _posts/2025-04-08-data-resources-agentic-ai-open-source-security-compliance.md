@@ -27,9 +27,9 @@ Key data provided by SCANOSS includes:
 
 This data enables agents to detect reused open source code, verify license attribution, trace code origins, identify components that might require export licenses due to cryptography, and flag software sourced from regions under trade restrictions or subject to data regulations.
 
-## NexB / AboutCode
+## AboutCode
 
-The NexB / [AboutCode](https://aboutcode.org/) initiative encompasses several open datasets, tools, and APIs designed for in-depth analysis of software components concerning licenses, security posture, and provenance. Key offerings include:
+The [AboutCode](https://aboutcode.org/) initiative encompasses several open datasets, tools, and APIs designed for in-depth analysis of software components concerning licenses, security posture, and provenance. Their key offerings include:
 
 * [ScanCode.io](https://github.com/aboutcode-org/scancode.io/), a self-hosted service with a RESTful API for scanning codebases
 * [VulnerableCode](https://public.vulnerablecode.io/), a public API that maps open source packages to known vulnerabilities
