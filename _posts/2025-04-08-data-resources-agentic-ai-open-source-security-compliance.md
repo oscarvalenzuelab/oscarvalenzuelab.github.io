@@ -6,7 +6,7 @@ author: oscar
 categories: [ oss, security, compliance, supplychain, ai, n8n, sbom ]
 tags: [sbom, compliance, oss, supplychain, openchain, ai, n8n]
 image: images/posts/agenticai_sboms.png
-description: "Learn how to use data sources like ScanOSS & NexB with Agentic AI to improve open source security audits and compliance risk management"
+description: "Learn how to use data sources like SCANOSS & VulnerableCode with Agentic AI to improve open source security audits and compliance risk management"
 featured: true
 comments: false
 ---
