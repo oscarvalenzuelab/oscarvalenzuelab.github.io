@@ -64,4 +64,3 @@ Other organizations like OpenSSF, ClearlyDefined, and Deps.dev offer data source
 AI won’t replace compliance engineers but will change how we work. Instead of spending hours looking for missing package metadata, checking GitHub for licenses, reading reports, or fixing bad SBOMs, we’ll design systems that do most of the heavy lifting for us. We’ll focus on the decisions that matter, and we’ll train agents to handle the rest.
 
 We’re already seeing that shift, and it's worth building on. AI agents represent the next wave in compliance management. Now is the time to start riding it.
-
