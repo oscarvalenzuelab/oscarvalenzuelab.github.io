@@ -11,7 +11,7 @@ featured: false
 comments: false
 ---
 
-Following my previous post, I want to expand on the topic with some ideas for data feeds that support open source compliance audits and risk assessments when using an Agentic AI approach. These resources are available today, and I’ve had the chance to test and demonstrate them in a recent talk.
+Following my [previous post](https://ovalenzuela.com/2025/04/ai-agents-the-missing-piece-in-sbom-compliance.html), I want to expand on the topic with some ideas for data feeds that support open source compliance audits and risk assessments when using an Agentic AI approach. These resources are available today, and I’ve had the chance to test and demonstrate them in a recent talk.
 
 ## SCANOSS / Software Transparency Foundation
 
