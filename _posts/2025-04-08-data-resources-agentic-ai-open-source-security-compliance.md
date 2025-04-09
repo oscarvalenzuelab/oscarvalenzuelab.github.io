@@ -5,7 +5,7 @@ title:  "Data Resources for Agentic AI in Open Source Security and Compliance"
 author: oscar
 categories: [ oss, security, compliance, supplychain, ai, n8n, sbom ]
 tags: [sbom, compliance, oss, supplychain, openchain, ai, n8n]
-image: images/posts/agenticai_sboms.png
+image: images/posts/agentic_sboms_datafeed.png
 description: "Learn how to use data sources like SCANOSS & VulnerableCode with Agentic AI to improve open source security audits and compliance risk management"
 featured: true
 comments: false
