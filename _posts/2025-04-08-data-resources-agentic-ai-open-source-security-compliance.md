@@ -7,7 +7,7 @@ categories: [ oss, security, compliance, supplychain, ai, n8n, sbom ]
 tags: [sbom, compliance, oss, supplychain, openchain, ai, n8n]
 image: images/posts/agentic_sboms_datafeed.png
 description: "Learn how to use data sources like SCANOSS & VulnerableCode with Agentic AI to improve open source security audits and compliance risk management"
-featured: true
+featured: false
 comments: false
 ---
 
