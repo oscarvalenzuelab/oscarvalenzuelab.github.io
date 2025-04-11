@@ -156,7 +156,7 @@ comments: true
 </p>
 
 <p align="justify">
-  <img class="aligncenter wp-image-772 size-full" src="http://www.ovalenzuela.com/images/posts/oldwp/factor_tecnico.png" alt="factor_tecnico" width="332" height="215" sizes="(max-width: 332px) 100vw, 332px" />
+  <img class="aligncenter wp-image-772 size-full" src="/images/posts/oldwp/factor_tecnico.png" alt="factor_tecnico" width="332" height="215" sizes="(max-width: 332px) 100vw, 332px" />
 </p>
 
 <p align="justify">
@@ -168,7 +168,7 @@ comments: true
 </p>
 
 <p align="justify">
-  <img class="aligncenter wp-image-773 size-full" src="http://www.ovalenzuela.com/images/posts/oldwp/factor_ambiente.png" alt="factor_ambiente" width="292" height="153" />
+  <img class="aligncenter wp-image-773 size-full" src="/images/posts/oldwp/factor_ambiente.png" alt="factor_ambiente" width="292" height="153" />
 </p>
 
 <p align="justify">
@@ -375,7 +375,7 @@ comments: true
 </p>
 
 <p align="justify">
-  <img class="aligncenter wp-image-774 size-full" src="http://www.ovalenzuela.com/images/posts/oldwp/casos_uso.png" alt="casos_uso" width="304" height="129" sizes="(max-width: 304px) 100vw, 304px" />
+  <img class="aligncenter wp-image-774 size-full" src="/images/posts/oldwp/casos_uso.png" alt="casos_uso" width="304" height="129" sizes="(max-width: 304px) 100vw, 304px" />
 </p>
 
 <p align="justify">
@@ -395,7 +395,7 @@ comments: true
 </p>
 
 <p align="justify">
-  <img class="aligncenter wp-image-775 size-full" src="http://www.ovalenzuela.com/images/posts/oldwp/resultados_final.png" alt="resultados_final" width="594" height="184" sizes="(max-width: 594px) 100vw, 594px" />
+  <img class="aligncenter wp-image-775 size-full" src="/images/posts/oldwp/resultados_final.png" alt="resultados_final" width="594" height="184" sizes="(max-width: 594px) 100vw, 594px" />
 </p>
 
 <p align="justify">
