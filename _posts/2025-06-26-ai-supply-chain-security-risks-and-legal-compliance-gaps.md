@@ -178,7 +178,7 @@ Standard cybersecurity tools fail to address AI-specific risks:
 Software Composition Analysis (SCA) tools like Snyk, Dependabot, and Trivy focus on declared dependencies in requirements.txt or setup.py files. They cannot:
 
 **Analyze Package Contents**
-SCA tools do not extract and examine files within wheel (.whl) or tar.gz packages. This means bundled model files remain invisible to security scanning.
+SCA tools do not extract and examine files within wheel (.whl) or tar.gz packages. This means bundled model files remain invisible to security scanning. While some SCAs include features to inspect archive files, they are not capable of directly handling serialization and binary blobs.
 
 **Understand Model Formats**
 Traditional tools cannot parse pickle, ONNX, or other AI-specific file formats. They treat model files as generic binary data without security analysis.
