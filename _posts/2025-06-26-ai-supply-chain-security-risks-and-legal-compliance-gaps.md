@@ -5,7 +5,7 @@ title:  "AI Supply Chain Security Risks and Legal Compliance Gaps"
 author: oscar
 categories: [ oss, security, compliance, supplychain, ai, sbom ]
 tags: [sbom, compliance, oss, supplychain, openchain, ai]
-image: images/posts/agentic_sboms_datafeed.png
+image: images/posts/waponized_ai_models.png
 description: "Security vulnerabilities and legal compliance gaps in AI model distribution, analyzing real-world attacks and licensing violations."
 featured: false
 comments: false
