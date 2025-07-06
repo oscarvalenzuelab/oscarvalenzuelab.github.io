@@ -275,10 +275,10 @@ The AI revolution brings tremendous business opportunities alongside new categor
 
 5. PyTorch Team. (2022). PyTorch-nightly dependency compromised. https://pytorch.org/blog/compromised-nightly-dependency/
 
-6. Mithril Security. (2023). PoisonGPT: How we hid a lobotomized LLM on Hugging Face to spread fake news. https://mithrilsecurity.io/blog/poison-gpt
+6. Mithril Security. (2023). PoisonGPT: How we hid a lobotomized LLM on Hugging Face to spread fake news. https://blog.mithrilsecurity.io/poisongpt-how-we-hid-a-lobotomized-llm-on-hugging-face-to-spread-fake-news/
 
-7. JFrog Security Research. (2024). Malicious ML Models on Hugging Face. https://research.jfrog.com/vulnerabilities/malicious-ml-models-huggingface/
+7. JFrog Security Research. (2024). Malicious ML Models on Hugging Face. https://jfrog.com/blog/jfrog-and-hugging-face-join-forces/
 
-8. Wiz Research. (2024). Ultralytics YOLOv8 Cryptominer Supply Chain Attack. https://www.wiz.io/blog/ultralytics-yolov8-cryptominer
+8. Wiz Research. (2024). Ultralytics YOLOv8 Cryptominer Supply Chain Attack. https://www.wiz.io/blog/ultralytics-ai-library-hacked-via-github-for-cryptomining
 
-9. ReversingLabs. (2025). Backdoored ML Models Evade Hugging Face Scanners. https://www.reversinglabs.com/blog/backdoored-ml-models-evade-huggingface-scanners
+9. ReversingLabs. (2025). Backdoored ML Models Evade Hugging Face Scanners. https://www.reversinglabs.com/newsroom/press-releases/reversinglabs-identifies-novel-ml-malware-hosted-on-leading-hugging-face-ai-model-platform
