@@ -72,6 +72,7 @@ New license types like OpenRAIL, CreativeML-OpenRAIL-M, and BigScience-BLOOM-RAI
 Analysis found 707 GitHub projects using restrictively licensed models while distributing their own code under permissive licenses¹. This creates potential legal exposure for any organization using these projects.
 
 **Specific Violation Examples**
+It's common to find repositories on GitHub for projects that use permissive licenses but include (or bundle) incompatible models. The most common cases are:
 • Apache 2.0 licensed projects using GPL-3.0 licensed models
 • MIT licensed software incorporating CC-BY-SA-4.0 models
 • Commercial applications using non-commercial research models
@@ -109,7 +110,7 @@ Only 18% of analyzed models document potential biases¹. This creates liability 
 
 ## Security Threat Landscape
 
-AI models introduce attack vectors that traditional cybersecurity tools cannot detect or prevent.
+AI models introduce attack vectors that traditional cybersecurity tools cannot detect or prevent. Although the known impact may be reduced or limited—potentially due to the absence of tools capable of detecting these issues at scale—there are some well-known real-world cases:
 
 ### Weaponized Model Incidents
 
@@ -130,6 +131,8 @@ ReversingLabs identified sophisticated attacks using corrupted 7z archives to hi
 
 ### Attack Vector Analysis
 
+If everyone is adopting AI for everything, how is it possible that these problems occur? The honest truth is that mostly no one is looking, verifying, or reviewing. As a result, attack vectors remain available.
+
 **Model Serialization Exploits**
 Pickle format attacks remain the most common threat vector. Malicious actors embed executable code within model files that runs automatically during loading. This code can:
 
@@ -149,10 +152,12 @@ Malicious packages with names similar to legitimate AI libraries trick developer
 
 ### Current Protection Gaps
 
+Industry technical leaders are actively trying to reduce or control the situation. However, it is unusual that these efforts are not widely recognized or discussed. I would assume that companies with Open Source Program Offices (OSPOs) or specialized security teams would have their own governance programs focused on handling AI models. Unfortunately, the sad reality is that very few understand the problem or attempt to implement the best supply chain practices.
+
 **HuggingFace Security Measures**
 HuggingFace implements several security controls:
 
-• Pickle scanning for known malicious patterns
+• Pickle scanning for known malicious patterns (limited)
 • Automated malware detection
 • Community reporting mechanisms
 • SafeTensors format promotion
@@ -175,7 +180,7 @@ Standard cybersecurity tools fail to address AI-specific risks:
 
 ## Why Traditional Security Tools Fall Short
 
-Software Composition Analysis (SCA) tools like Snyk, Dependabot, and Trivy focus on declared dependencies in requirements.txt or setup.py files. They cannot:
+Software Composition Analysis (SCA) tools focus on declared dependencies in requirements.txt or setup.py files, while specialized code scanners or snippet analysis tools focus on hash matching against known signatures. However, they cannot:
 
 **Analyze Package Contents**
 SCA tools do not extract and examine files within wheel (.whl) or tar.gz packages. This means bundled model files remain invisible to security scanning. While some SCAs include features to inspect archive files, they are not capable of directly handling serialization and binary blobs.
@@ -192,7 +197,11 @@ No existing tools analyze the legal or ethical implications of training datasets
 **Monitor AI-Specific Network Activity**
 Models may communicate with external services through subtle channels that traditional network monitoring cannot detect. AI-specific exfiltration methods evade standard security controls.
 
-## Organizational Risk Assessment
+## AI Governance Model
+
+So, what should we focus on to create an internal risk management strategy for AI models? Start by assessing your risks and establish AI-oriented security processes.
+
+### Organizational Risk Assessment
 
 **Immediate Threats**
 • Malicious models stealing credentials or data
@@ -212,7 +221,7 @@ Models may communicate with external services through subtle channels that tradi
 • Operational disruption from compromised AI systems
 • Competitive disadvantage from security incidents
 
-## Recommendations for Organizations
+### Recommendations for Organizations
 
 **Establish AI-Specific Security Processes**
 
@@ -260,6 +269,8 @@ Create dedicated review procedures for AI models and related packages. Tradition
 • Invest in AI-specific security tooling
 • Develop partnerships with AI security vendors
 • Create internal AI security standards and policies
+
+## Takeaways
 
 The AI revolution brings tremendous business opportunities alongside new categories of risk. Organizations that proactively address these challenges will gain competitive advantages while protecting themselves from emerging threats. Those that ignore AI-specific risks face increasing exposure to both security incidents and legal liability.
 
