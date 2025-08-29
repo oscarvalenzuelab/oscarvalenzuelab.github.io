@@ -5,7 +5,7 @@ title:  "BSA Security Scanning tool for AI Models"
 author: oscar
 categories: [ oss, security, compliance, supplychain, ai, models, sca ]
 tags: [sbom, compliance, oss, supplychain, openchain, ai]
-image: images/posts/waponized_ai_models.png
+image: images/posts/BSA_Model_Scanner.png
 description: "Security vulnerabilities and legal compliance gaps in AI model distribution, analyzing real-world attacks and licensing violations."
 featured: false
 comments: false
@@ -44,6 +44,8 @@ The output integrates with GitHub Actions. It generates SARIF reports for CI/CD 
 
 ### What This Means for Your Organization
 Every organization adopting AI faces the same choice. Wait for the first ML supply chain attack to hit your systems. Or start scanning your models today, and share your experience with others so we can improve tooling and research.
+
+<img src="images/posts/bsa_results.png">
 
 BinarySniffer is Open Source under Apache-2.0 and available on GitHub. Feel free to submit comments, recommendations, examples, new signatures, and even feature requests.
 
