@@ -5,7 +5,7 @@ title:  "Beyond Simple Code Scanning: Advanced Semantic Analysis for AI-Generate
 author: oscar
 categories: [ oss, security, compliance, supplychain, ai, models, sca ]
 tags: [sbom, compliance, oss, supplychain, openchain, ai]
-image: images/posts/BSA_Model_Scanner.png
+image: images/posts/semantic_copycat.png
 description: "Security vulnerabilities and legal compliance gaps in AI model distribution, analyzing real-world attacks and licensing violations."
 featured: false
 comments: false
@@ -19,7 +19,7 @@ These tools offer remarkable productivity gains, but they also introduce subtle 
 ## The Growing Challenge of AI Code Compliance
 Most current scanners rely on pattern matching, hashing, and surface-level similarity. This works for detecting direct reuse, but not for transformed, translated, or restructured code.
 
-For example, an AI system might generate an audio or video codec that implements patented algorithms. Even though the code looks different (using new names, structures, or even languages) the core logic may still be the same. This can lead to intellectual property violations without any obvious sign of duplication.
+For example, an AI system might generate an audio or video codec that implements patented algorithms. Even though the code looks different (using new names, structures, or even languages), the core logic may still be the same. This can lead to intellectual property violations without any obvious sign of duplication.
 
 ## Why Traditional Scanners Fall Short
 ### Transformation blindness
