@@ -48,9 +48,9 @@ Many organizations distribute AI models inside standard Python packages (wheel f
 When developers install a Python package that contains AI models, traditional dependency scanners only check the package metadata and Python code. They miss the model files stored in data folders within the package.
 
 **Real Distribution Examples**
-• Transformers library bundles model configurations
-• Custom ML packages include pre-trained weights in data directories
-• Industry-specific packages embed domain models as package resources
+* Transformers library bundles model configurations
+* Custom ML packages include pre-trained weights in data directories
+* Industry-specific packages embed domain models as package resources
 
 This distribution method bypasses most security scanning because the models exist as data files rather than declared dependencies.
 
@@ -73,9 +73,9 @@ Analysis found 707 GitHub projects using restrictively licensed models while dis
 
 **Specific Violation Examples**
 It's common to find repositories on GitHub for projects that use permissive licenses but include (or bundle) incompatible models. The most common cases are:
-• Apache 2.0 licensed projects using GPL-3.0 licensed models
-• MIT licensed software incorporating CC-BY-SA-4.0 models
-• Commercial applications using non-commercial research models
+* Apache 2.0 licensed projects using GPL-3.0 licensed models
+* MIT licensed software incorporating CC-BY-SA-4.0 models
+* Commercial applications using non-commercial research models
 
 ### Dataset Provenance Problems
 
@@ -98,15 +98,15 @@ The Stability AI StableLM model sparked legal discussions about licensing validi
 Only 18% of analyzed models document potential biases¹. This creates liability for organizations deploying models in regulated industries or customer-facing applications.
 
 **Documented Bias Categories**
-• Population bias affecting demographic groups
-• Geographic bias favoring certain regions
-• Cultural and religious bias in content generation
-• Historical bias reflecting outdated social norms
+* Population bias affecting demographic groups
+* Geographic bias favoring certain regions
+* Cultural and religious bias in content generation
+* Historical bias reflecting outdated social norms
 
 **Business Impact Examples**
-• Hiring tools showing gender bias in candidate ranking
-• Credit models discriminating against protected classes
-• Content generation systems producing culturally insensitive outputs
+* Hiring tools showing gender bias in candidate ranking
+* Credit models discriminating against protected classes
+* Content generation systems producing culturally insensitive outputs
 
 ## Security Threat Landscape
 
@@ -136,10 +136,10 @@ If everyone is adopting AI for everything, how is it possible that these problem
 **Model Serialization Exploits**
 Pickle format attacks remain the most common threat vector. Malicious actors embed executable code within model files that runs automatically during loading. This code can:
 
-• Install persistent backdoors
-• Exfiltrate sensitive data
-• Establish command and control channels
-• Deploy additional malware
+* Install persistent backdoors
+* Exfiltrate sensitive data
+* Establish command and control channels
+* Deploy additional malware
 
 **Supply Chain Injection**
 Attackers target model repositories, CI/CD pipelines, and distribution infrastructure to inject malicious code into legitimate models. These attacks affect downstream users who trust the model source.
@@ -157,26 +157,26 @@ Industry technical leaders are actively trying to reduce or control the situatio
 **HuggingFace Security Measures**
 HuggingFace implements several security controls:
 
-• Pickle scanning for known malicious patterns (limited)
-• Automated malware detection
-• Community reporting mechanisms
-• SafeTensors format promotion
+* Pickle scanning for known malicious patterns (limited)
+* Automated malware detection
+* Community reporting mechanisms
+* SafeTensors format promotion
 
 **Identified Weaknesses**
 Research reveals significant gaps in current protections:
 
-• Static analysis cannot detect runtime-activated threats
-• Obfuscated payloads evade signature-based detection
-• Social engineering bypasses community review
-• Advanced serialization attacks exploit parser vulnerabilities
+* Static analysis cannot detect runtime-activated threats
+* Obfuscated payloads evade signature-based detection
+* Social engineering bypasses community review
+* Advanced serialization attacks exploit parser vulnerabilities
 
 **Traditional Security Tool Limitations**
 Standard cybersecurity tools fail to address AI-specific risks:
 
-• Antivirus software cannot analyze model behavior
-• Network monitoring misses AI-specific exfiltration methods
-• Dependency scanners ignore bundled model files
-• Code analysis tools cannot inspect serialized weights
+* Antivirus software cannot analyze model behavior
+* Network monitoring misses AI-specific exfiltration methods
+* Dependency scanners ignore bundled model files
+* Code analysis tools cannot inspect serialized weights
 
 ## Why Traditional Security Tools Fall Short
 
@@ -204,22 +204,22 @@ So, what should we focus on to create an internal risk management strategy for A
 ### Organizational Risk Assessment
 
 **Immediate Threats**
-• Malicious models stealing credentials or data
-• Backdoored packages in AI development environments
-• License violations in production AI systems
-• Bias-related legal exposure from undocumented model behavior
+* Malicious models stealing credentials or data
+* Backdoored packages in AI development environments
+* License violations in production AI systems
+* Bias-related legal exposure from undocumented model behavior
 
 **Long-Term Concerns**
-• Increasing sophistication of AI-targeted attacks
-• Regulatory enforcement of AI compliance requirements
-• Supply chain attacks targeting AI infrastructure
-• Copyright litigation over training data usage
+* Increasing sophistication of AI-targeted attacks
+* Regulatory enforcement of AI compliance requirements
+* Supply chain attacks targeting AI infrastructure
+* Copyright litigation over training data usage
 
 **Business Impact**
-• Financial liability from legal violations
-• Reputational damage from biased AI outputs
-• Operational disruption from compromised AI systems
-• Competitive disadvantage from security incidents
+* Financial liability from legal violations
+* Reputational damage from biased AI outputs
+* Operational disruption from compromised AI systems
+* Competitive disadvantage from security incidents
 
 ### Recommendations for Organizations
 
@@ -229,46 +229,46 @@ Create dedicated review procedures for AI models and related packages. Tradition
 
 **Implement Model Intake Controls**
 
-• Verify model source and authenticity
-• Convert pickle-based models to safer formats when possible
-• Scan model files for embedded executables
-• Test model behavior in isolated environments
-• Document training data sources and licenses
+* Verify model source and authenticity
+* Convert pickle-based models to safer formats when possible
+* Scan model files for embedded executables
+* Test model behavior in isolated environments
+* Document training data sources and licenses
 
 **Deploy Specialized Security Tools**
 
-• Use ModelScan for multi-format model file analysis
-• Implement Adversarial Robustness Toolbox for model testing
-• Deploy Garak for LLM vulnerability assessment
-• Add AI-specific monitoring to network security
+* Use ModelScan for multi-format model file analysis
+* Implement Adversarial Robustness Toolbox for model testing
+* Deploy Garak for LLM vulnerability assessment
+* Add AI-specific monitoring to network security
 
 **Develop Legal Compliance Programs**
 
-• Audit existing AI model usage for license compliance
-• Create approval processes for new AI licensing models
-• Establish dataset provenance requirements
-• Document bias testing and mitigation efforts
+* Audit existing AI model usage for license compliance
+* Create approval processes for new AI licensing models
+* Establish dataset provenance requirements
+* Document bias testing and mitigation efforts
 
 **Train Development Teams**
 
-• Educate developers about AI-specific security risks
-• Provide guidance on safe model handling practices
-• Create incident response procedures for AI security events
-• Establish secure AI development workflows
+* Educate developers about AI-specific security risks
+* Provide guidance on safe model handling practices
+* Create incident response procedures for AI security events
+* Establish secure AI development workflows
 
 **Monitor the Threat Landscape**
 
-• Subscribe to AI security threat intelligence feeds
-• Participate in AI security community forums
-• Regular security assessments of AI infrastructure
-• Stay current with emerging AI attack techniques
+* Subscribe to AI security threat intelligence feeds
+* Participate in AI security community forums
+* Regular security assessments of AI infrastructure
+* Stay current with emerging AI attack techniques
 
 **Build Organizational Capabilities**
 
-• Hire or train staff with AI security expertise
-• Invest in AI-specific security tooling
-• Develop partnerships with AI security vendors
-• Create internal AI security standards and policies
+* Hire or train staff with AI security expertise
+* Invest in AI-specific security tooling
+* Develop partnerships with AI security vendors
+* Create internal AI security standards and policies
 
 ## Takeaways
 
