@@ -1,0 +1,72 @@
+# Site
+name: "Oscar's Blog"
+title: "Oscar's Blog"
+description: "Free Software, GNU/Linux, License Compliance, and more."
+logo: 'https://avatars3.githubusercontent.com/u/12322852?s=460&v=4'
+favicon: 'images/favico.png'
+baseurl: /
+google_analytics: 'UA-50598012-1'
+disqus: ''
+mailchimp-list: 
+include: ["_pages"]
+permalink: /:title/
+
+# Authors
+authors:
+  sal:
+    name: Sal
+    display_name: Sal
+    gravatar: e56154546cf4be74e393c62d1ae9f9d4
+    email: wowthemesnet@gmail.com
+    web: https://www.ovalenzuela.com
+    twitter: https://twitter.com/wowthemesnet
+    description: "Author of Mediumish, a Bootstrap Medium styled template available for WordPress, HTML, Ghost and Jekyll. You are currently previewing Jekyll template demo."
+  oscar:
+    name: Oscar Valenzuela
+    display_name: Oscar
+    gravatar: e17523fd9dfc61bcdd837836bfc8fa21
+    email: alkamod@gmail.com
+    web: https://www.ovalenzuela.com
+    twitter: https://twitter.com/alkamodz
+    linkedin: https://www.linkedin.com/in/alkamod/
+    description: "I collect mechanical wristwatches and enjoy listening to jazz and techno music. As an open source enthusiast, I focus on legal compliance issues in the software world."
+
+# Plugins
+plugins:
+  - jekyll-paginate
+  - jekyll-sitemap
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-archives
+    
+# Archives
+jekyll-archives:
+  enabled:
+    - categories
+  layout: archive
+  permalinks:
+    category: '/category/:name/'
+    
+# Pagination 
+paginate: 6
+paginate_path: /page:num/
+    
+# Other
+markdown: kramdown
+
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: true
+
+# Adsense (change to "enabled" to activate, also your client id and ad slot. Create a new ad unit from your Adsense account to get the slot.)
+adsense: "disabled"
+adsense-data-ad-client: "ca-pub-3412143450191416"
+adsense-data-ad-slot: "1363087678"
+
+# Lazy Images ("enabled" or "disabled")
+lazyimages: "disabled"
+
+exclude: [changelog.md, LICENSE.txt, README.md, Gemfile, Gemfile.lock]
