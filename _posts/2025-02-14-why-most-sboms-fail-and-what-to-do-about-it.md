@@ -7,7 +7,7 @@ categories: [ oss, security, compliance, supplychain, openchain ]
 tags: [sbom, compliance, oss, supplychain, openchain]
 image: images/posts/sbom.png
 description: "Why Most SBOMs Fail and What to Do About It"
-featured: true
+featured: false
 comments: false
 ---
 
