@@ -1,7 +1,7 @@
 ---
 layout: post
 permalink: /2025/11/why-traditional-sca-fails-when-you-audit-ai-generated-code.html
-title:  "Why Traditional SCA Fails When You Audit AI Generated Code"
+title: "Why Traditional SCA Fails When You Audit AI Generated Code"
 author: oscar
 categories: [ ai, security, compliance ]
 tags: [ai, sca, security, compliance, code-analysis, gpl, patents, scanning]
@@ -12,29 +12,19 @@ published: false
 comments: false
 ---
 
-AI coding assistants changed how developers write software. They help you move fast, but they also change the shape of your code in ways that break the old tools you depend on to keep your projects clean. Traditional SCA scanners were built for a world where code came from packages, open source projects, and human copy and paste mistakes. They were not built for code rewritten by a model.
+AI coding assistants changed how developers write software. They help you move faster, but they also reshape the code in ways that break the tools you rely on to keep projects clean. Traditional SCA scanners were built for code that came from packages, open source repositories, and human copy and paste. They were not built for code rewritten by a model.
 
 Your risk did not change. Your code did.
 
-The scanner only sees the text in front of it. When the text changes enough, it stops recognizing the original license or patent risk hidden inside the logic. If you rely only on classic SCA, you are missing the exact type of contamination AI produces every day.
+SCA tools only see the text in front of them. When that text changes enough, the scanner stops recognizing the license or patent risk inside the logic. If you depend only on classic SCA, you miss the exact type of contamination AI produces.
 
 ## AI rewrites code in ways SCA cannot match
 
-AI does not paste GPL or patented code. It rewrites it. The logic stays the same. The text does not. Classic scanners break because they rely on text, not behavior.
+AI does not paste code from GPL kernels or patented codec libraries. It rewrites it. The logic stays the same while the text changes. This breaks scanners that only compare strings or syntax.
 
-You see this in common transformations.
+AI applies many transformations at once. It renames variables and functions, changes formatting, restructures loops, or builds helper functions that did not exist before. It often switches languages. The same algorithm can move from C to Python or from JavaScript to Go. The meaning survives the rewrite. The text does not.
 
-- AI renames variables and functions.
-- AI changes indentation and formatting.
-- AI moves blocks, splits functions, or merges them.
-- AI translates code between languages.
-- AI adapts the algorithm to match a framework.
-- AI rewrites control flow with a new style.
-- AI rebuilds the same algorithm from scratch with different syntax.
-
-These changes hide the source of the code even when the algorithm is identical.
-
-A simple example shows how fast this breaks text based SCA. Here is a small part of a GPL function from the Linux kernel:
+Here is a small example from the Linux kernel. The original GPL code:
 
 ```c
 static void __rb_rotate_left(struct rb_node *node) {
@@ -45,7 +35,7 @@ static void __rb_rotate_left(struct rb_node *node) {
 }
 ```
 
-This is the same logic after an AI rewrite in Python:
+This is what a model may produce:
 
 ```python
 def rotate_left(self, n):
@@ -56,90 +46,68 @@ def rotate_left(self, n):
     r.left = n
 ```
 
-The control flow, steps, and meaning match the GPL version. Only the text changed. A human can see it. A traditional scanner cannot.
-
-Once the text and layout shift, string matching, block hashing, winnowing, and AST rules lose their signals.
+The behavior is the same. The structure is the same. Only the shape of the text changed. A human sees the match. A text based scanner does not. Once the text shifts, string matching, block hashing, winnowing, and language specific AST rules all lose their signals.
 
 ## When traditional SCA still works
 
-Traditional SCA is not useless. It still works when you expect to match public code as-is. If your concern is package level dependencies, manifests, or files that appear in open source repositories unchanged, classic scanners do their job.
+Traditional SCA still has value. It works when the code you check matches public code as-is. If you want to find package level dependencies, validate manifests, or track imports, classic tools do their job. They also work when you expect developers to copy code without rewriting it.
 
-They are still useful when:
-
-- You look for known packages.
-- You expect to find the same files that appear on the internet.
-- You need SBOM level metadata.
-- You track what your build system imports.
-
-They break when the code is produced by a model that rewrites the shape while keeping the original logic.
+They break when models generate the code, because models rewrite everything while keeping the original algorithm.
 
 ## Why AI generated code is easy to get wrong
 
-Developers trust AI because the output looks clean. The code has no GPL headers, no obvious license clues, and no package references. Many teams believe the code is original. It is not original if the model reproduces a known algorithm.
+AI generated code looks clean, which leads many teams to assume it is original. There are no headers, no license markers, and no obvious links to upstream projects. Yet the model may rebuild known algorithms from GPL, AGPL, or patented sources. It may recreate parts of H.264 or H.265. It may generate DCT, FFT, or motion compensation routines. It may rebuild functions from FFmpeg. It may reproduce data structure logic from old GPL kernels.
 
-The problem is not limited to copyleft licenses. Many AI assistants rebuild routines that match patented code like H.264 or H.265. They generate FFT and DCT routines that match patented algorithms. They recreate well known algorithms from FFmpeg and other codec stacks. They reproduce database routines from AGPL projects. They rebuild common data structures from GPL kernels. They regenerate proprietary encryption or compression algorithms.
-
-The risk is the same even when the output looks new.
-
-You ship the code. Your SCA report says everything is clean. The logic says something else.
+You ship the code. Your SCA report says there is no problem. The logic inside the file tells a different story.
 
 ## Why scanners fail on real AI output
 
-Text based scanners do one thing. They check if today's code looks like yesterday's code. They depend on shared text. When an AI model rewrites that text, there is nothing left to compare. The scanner cannot see across languages. It cannot detect the structure of the algorithm. It cannot follow control flow when the steps move around. It cannot track data flow when the values travel through new variables or helpers. It does not see logic that has been rebuilt in a different form. It also cannot catch a rewritten routine that comes from a patent source.
+Text based scanners compare today's code with older public samples. They only detect shared text. When a model rewrites that text, the scanner no longer sees the source behind it. The tool cannot follow the algorithm across languages or follow control flow when the order of operations moves. It cannot detect when two functions share the same logic but not the same structure. It cannot detect semantic matches or code rebuilt from common algorithm patterns. It cannot identify a patent encumbered routine that was reconstructed in a different style.
 
-This gap grows every year because the models keep getting better at rewriting code and hiding direct traces of the source.
+This gap grows as AI models get better at rewriting code.
 
 ## Circular validation hides the real failure
 
-The most misleading part of SCA accuracy today comes from circular validation. Many SCA tools test themselves using public datasets. That worked in the past. It does not work now because AI models were trained on the same public code.
+Accuracy claims for traditional SCA often rely on public test sets. That worked before AI. It does not work today because models were trained on the same public code that scanners use as their reference.
 
 This creates a loop.
 
-- AI assistants are trained on public code
-- SCA tools compare code against public code
-- Both systems share the same data
-- Tests show high accuracy
-- Real world detection collapses when the code is new or private
+AI assistants learn public code.
+SCA tools compare against public code.
+Both systems anchor to the same corpus.
+Tests show strong results.
+Detection collapses when the code is private, new, or rewritten.
 
-This same pattern appeared in the evaluation of CopycatM. Matching performance on private code dropped eight points compared to public datasets because public tests were inflated. Public code appears in model training sets, so it is easy to match. Real code written after the training cutoff does not match the public reference. Tests on that code matter more than anything else.
+This same pattern appeared in the evaluation of CopycatM. When tested on public datasets, matching looked strong. When tested on private code written after the training cutoff, performance dropped eight points. Tests based only on public corpora are inflated because they overlap with the training data of the models you are trying to audit.
 
-This same problem hits every traditional scanner that depends on public corpora.
+Any scanner that depends on public text suffers from the same problem.
 
 ## A better approach checks the behavior, not the text
 
-To audit AI generated code, you need something beyond text. You need to check what the code does.
+Auditing AI generated code requires a different view. You need to check what the code does, not only how it looks. The key question is simple. Does this function behave like a known GPL or patented routine. If the behavior matches, the risk is present even when the text is new.
 
-The question is not "Does this file look like a file from the internet".
-The question is "Does this function behave like a known GPL or patented algorithm".
+This requires analysis of control flow, data flow, algorithm structure, and operation sequences. It requires semantic fingerprints that survive rewrites. It requires checks that work on small and large snippets. It requires understanding how functions interact across a file. These signals survive the transformations that models apply.
 
-If the behavior matches, the risk is present even when the text does not.
+Approaches that survive these rewrites are built on this idea. They follow the logic through the rewrite instead of trusting the surface text.
 
-This requires a mix of techniques.
+## About permissive corpora and why they are not enough
 
-- Check the control flow.
-- Check the data flow.
-- Check the structure of the algorithm.
-- Check the operations sequence.
-- Check semantic fingerprints that survive renaming and rewrites.
-- Check both small and large snippets.
-- Check the full file graph when functions interact.
+Some vendors try to lower risk by training models only on permissive codebases. Amazon's Nova is one example. If the training data contains only permissive content, the chance of reproducing GPL code goes down. This addresses one part of the problem, but it does not remove the need to review the code.
 
-This is the reason transformation resistant approaches like the three tier model in CopycatM were built. The scanner must survive the same transformations the AI applies. Text alone cannot survive these changes.
+Developers still combine model output with legacy code. Applications still include old functions that do not appear in public samples. Teams still add code from unknown sources without checking it. Models still rebuild common algorithms that appear in many forms across many projects. Patent encumbered logic is not filtered by license type because patents do not care about source licenses.
 
-## What about models trained only on permissive content
-
-Some vendors try to reduce license and patent risk by training models only on permissive codebases. Amazon's Nova offering goes in this direction. If the training corpus is truly limited to permissive licenses, the chance of reproducing GPL or AGPL text should drop a lot.
-
-The problem is we do not have public, verifiable data that proves these models never emit code that creates license or patent obligations. Training disclosures are high level, not complete inventories. Patent exposure is also separate from license filtering. An algorithm can be reconstructed from general knowledge, docs, or permissive examples and still map to a patent in a specific codec or hardware domain.
-
-You can reasonably treat these models as lower risk than generic web-trained models. You cannot treat them as mathematically safe. That is why I still recommend code-level review and semantic checks for high-value or high-risk components, even when you use a model trained on permissive corpora.
+The risk may be lower when training data is filtered, but there is no way to prove the absence of all non permissive material. There is also no public dataset that shows the exact difference between permissive only training and mixed training in real world cases. To measure this properly, you would need a large set of model outputs, ground truth provenance, and verified training exclusions. None of this exists today. Because of that, the strongest claim you can make is that the risk is reduced in theory, not eliminated in practice.
 
 ## Why this matters for your daily work
 
-Your SCA tools tell you a story based on text. AI generated code lives in a different world. The logic you ship might match GPL or patented algorithms even when the text looks new.
+Your SCA tools still tell you a story based on text. AI generated code does not follow that story. The logic may match GPL or patented algorithms even when the text looks new. If your scanner cannot detect logic level matches, you are trusting a signal that no longer matches the code you ship.
 
-If your scanner cannot detect logic level matches, you are trusting a signal that no longer reflects the actual risk. AI changed the shape of the code. You need tools that follow the logic, not the characters.
+A modern code audit must track rewritten functions, code produced across languages, and semantic matches that survive heavy rewriting. This is the only way to catch the real contamination patterns that AI produces.
 
-A code audit today must handle rewritten functions, cross language output, and semantic matches that survive heavy rewrites. This is the only way to catch the real contamination patterns that AI produces.
+## What you can do next
+
+Start by reviewing how your team uses AI. Ask where AI generated functions enter your codebase. Check how your build system mixes old and new code. Identify the critical routines that influence licensing and patents. Add semantic checks to your audit path. Review algorithms that matter in codecs, crypto, compression, and data structures. Monitor the patterns that survive rewrites, not the text that changes.
+
+This gives you a safer view of your code and a more accurate picture of the real risk.
 
 *The views expressed in this document are solely my own and do not represent those of my current or past employers. If you identify an error, please contact me, and I will make the necessary updates.*
