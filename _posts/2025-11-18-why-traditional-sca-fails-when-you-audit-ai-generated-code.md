@@ -92,7 +92,7 @@ Approaches that survive these rewrites are built on this idea. They follow the l
 
 ## About permissive corpora and why they are not enough
 
-Some vendors try to lower risk by training models only on permissive codebases. Amazon's Nova is one example. If the training data contains only permissive content, the chance of reproducing GPL code goes down. This addresses one part of the problem, but it does not remove the need to review the code.
+Some vendors try to lower risk by training models only on permissive codebases. A few commercial offerings claim to follow this approach. If the training data contains only permissive content, the chance of reproducing GPL code goes down. This addresses one part of the problem, but it does not remove the need to review the code.
 
 Developers still combine model output with legacy code. Applications still include old functions that do not appear in public samples. Teams still add code from unknown sources without checking it. Models still rebuild common algorithms that appear in many forms across many projects. Patent encumbered logic is not filtered by license type because patents do not care about source licenses.
 
