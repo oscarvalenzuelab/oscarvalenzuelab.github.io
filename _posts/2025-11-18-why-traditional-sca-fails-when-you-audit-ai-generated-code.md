@@ -77,7 +77,7 @@ They break when the code is produced by a model that rewrites the shape while ke
 
 Developers trust AI because the output looks clean. The code has no GPL headers, no obvious license clues, and no package references. Many teams believe the code is original. It is not original if the model reproduces a known algorithm.
 
-The problem is not limited to GPL or AGPL. Many AI assistants rebuild parts of H.264 or H.265. They generate FFT and DCT routines that match patented code. They recreate well known algorithms from FFmpeg and other codec stacks. They reproduce database routines from AGPL projects. They rebuild common data structures from GPL kernels.
+The problem is not limited to copyleft licenses. Many AI assistants rebuild routines that match patented code like H.264 or H.265. They generate FFT and DCT routines that match patented algorithms. They recreate well known algorithms from FFmpeg and other codec stacks. They reproduce database routines from AGPL projects. They rebuild common data structures from GPL kernels. They regenerate proprietary encryption or compression algorithms.
 
 The risk is the same even when the output looks new.
 
@@ -85,17 +85,9 @@ You ship the code. Your SCA report says everything is clean. The logic says some
 
 ## Why scanners fail on real AI output
 
-Text based scanners do one thing. They check if today's code looks like yesterday's code. They depend on shared text. When AI models rewrite the text, there is nothing left to match.
+Text based scanners do one thing. They check if today's code looks like yesterday's code. They depend on shared text. When an AI model rewrites that text, there is nothing left to compare. The scanner cannot see across languages. It cannot detect the structure of the algorithm. It cannot follow control flow when the steps move around. It cannot track data flow when the values travel through new variables or helpers. It does not see logic that has been rebuilt in a different form. It also cannot catch a rewritten routine that comes from a patent source.
 
-- They cannot compare across languages.
-- They cannot detect algorithm structure.
-- They cannot compare control flow.
-- They cannot follow data flow when steps move around.
-- They do not detect semantic similarity.
-- They do not detect code rebuilt from the same logic.
-- They cannot catch a rewritten patent encumbered routine.
-
-This gap grows every year because models keep improving their rewrite ability.
+This gap grows every year because the models keep getting better at rewriting code and hiding direct traces of the source.
 
 ## Circular validation hides the real failure
 
@@ -136,16 +128,11 @@ This is the reason transformation resistant approaches like the three tier model
 
 ## What about models trained only on permissive content
 
-Some vendors try to reduce license and patent risk by training models on permissive corpora. Amazon's Nova is one example. When a model is trained only on permissive codebases, the chance of reproducing GPL code or other restrictive licenses goes down.
+Some vendors try to reduce license and patent risk by training models only on permissive codebases. Amazon's Nova offering goes in this direction. If the training corpus is truly limited to permissive licenses, the chance of reproducing GPL or AGPL text should drop a lot.
 
-This helps, but it does not remove the need for deeper analysis.
-- Developers still mix model output with their own code.
-- Applications still embed legacy functions.
-- Teams still pull in code from unknown sources.
-- Models still reconstruct algorithms from common knowledge.
-- Patent encumbered logic is not avoided by license filtering.
+The problem is we do not have public, verifiable data that proves these models never emit code that creates license or patent obligations. Training disclosures are high level, not complete inventories. Patent exposure is also separate from license filtering. An algorithm can be reconstructed from general knowledge, docs, or permissive examples and still map to a patent in a specific codec or hardware domain.
 
-Training only on permissive corpora reduces one class of risk but does not replace the need for code level review.
+You can reasonably treat these models as lower risk than generic web-trained models. You cannot treat them as mathematically safe. That is why I still recommend code-level review and semantic checks for high-value or high-risk components, even when you use a model trained on permissive corpora.
 
 ## Why this matters for your daily work
 
