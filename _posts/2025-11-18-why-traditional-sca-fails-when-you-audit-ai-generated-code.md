@@ -129,15 +129,13 @@ Traditional SCA still has value. It works when the code you check matches public
 
 They break when models generate the code, because models rewrite everything while keeping the original algorithm.
 
-## Why AI generated code is easy to get wrong
+## Why scanners fail on AI output
 
-AI generated code looks clean, which leads many teams to assume it is original. There are no headers, no license markers, and no obvious links to upstream projects. Yet the model may rebuild known algorithms from GPL, AGPL, or patented sources. It may recreate parts of H.264 or H.265. It may generate DCT, FFT, or motion compensation routines. It may rebuild functions from FFmpeg. It may reproduce data structure logic from old GPL kernels.
+AI generated code looks clean. There are no headers, no license markers, and no obvious links to upstream projects. This leads many teams to assume it is original. Yet the model may rebuild known algorithms from GPL, AGPL, or patented sources. It may recreate parts of H.264 or H.265. It may generate DCT, FFT, or motion compensation routines. It may rebuild functions from FFmpeg. It may reproduce data structure logic from old GPL kernels.
+
+Traditional scanners compare today's code with older public samples. They only detect shared text. When a model rewrites that text, the scanner no longer sees the source behind it. The tool cannot follow the algorithm across languages or follow control flow when the order of operations moves. It cannot detect when two functions share the same logic but not the same structure. It cannot detect semantic matches or code rebuilt from common algorithm patterns. It cannot identify a patent encumbered routine that was reconstructed in a different style.
 
 You ship the code. Your SCA report says there is no problem. The logic inside the file tells a different story.
-
-## Why scanners fail on real AI output
-
-Text based scanners compare today's code with older public samples. They only detect shared text. When a model rewrites that text, the scanner no longer sees the source behind it. The tool cannot follow the algorithm across languages or follow control flow when the order of operations moves. It cannot detect when two functions share the same logic but not the same structure. It cannot detect semantic matches or code rebuilt from common algorithm patterns. It cannot identify a patent encumbered routine that was reconstructed in a different style.
 
 This gap grows as AI models get better at rewriting code.
 
