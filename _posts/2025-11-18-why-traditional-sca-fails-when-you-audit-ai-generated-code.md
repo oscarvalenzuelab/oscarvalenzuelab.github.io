@@ -48,6 +48,81 @@ def rotate_left(self, n):
 
 The behavior is the same. The structure is the same. Only the shape of the text changed. A human sees the match. A text based scanner does not. Once the text shifts, string matching, block hashing, winnowing, and language specific AST rules all lose their signals.
 
+Here is another example showing how AI changes both language and structure. The original C code from a GPL library:
+
+```c
+// GPL licensed quicksort partition
+int partition(int arr[], int low, int high) {
+    int pivot = arr[high];
+    int i = (low - 1);
+    for (int j = low; j <= high - 1; j++) {
+        if (arr[j] < pivot) {
+            i++;
+            int temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+    }
+    int temp = arr[i + 1];
+    arr[i + 1] = arr[high];
+    arr[high] = temp;
+    return (i + 1);
+}
+```
+
+AI rewrites this to JavaScript using modern idioms:
+
+```javascript
+function partitionArray(data, start, end) {
+    const pivotValue = data[end];
+    let partitionIndex = start;
+
+    for (let current = start; current < end; current++) {
+        if (data[current] < pivotValue) {
+            [data[partitionIndex], data[current]] =
+                [data[current], data[partitionIndex]];
+            partitionIndex++;
+        }
+    }
+
+    [data[partitionIndex], data[end]] =
+        [data[end], data[partitionIndex]];
+    return partitionIndex;
+}
+```
+
+The algorithm is identical. The control flow matches step by step. The variable names changed. The loop syntax changed. The swap logic moved from explicit temp variables to destructuring. A traditional scanner sees no connection between these two functions.
+
+The problem extends beyond simple utilities to specialized algorithms. Consider this FFT butterfly operation from a signal processing library with patent concerns:
+
+```c
+// Butterfly computation (patent encumbered in some jurisdictions)
+void fft_butterfly(complex *x, complex *y, complex w) {
+    complex temp = mult_complex(*y, w);
+    y->real = x->real - temp.real;
+    y->imag = x->imag - temp.imag;
+    x->real = x->real + temp.real;
+    x->imag = x->imag + temp.imag;
+}
+```
+
+AI generates this in Python for a streaming application:
+
+```python
+def apply_butterfly_transform(sample_a, sample_b, twiddle):
+    """Apply FFT butterfly operation to two samples"""
+    weighted = complex(
+        sample_b.real * twiddle.real - sample_b.imag * twiddle.imag,
+        sample_b.real * twiddle.imag + sample_b.imag * twiddle.real
+    )
+    return (
+        complex(sample_a.real + weighted.real, sample_a.imag + weighted.imag),
+        complex(sample_a.real - weighted.real, sample_a.imag - weighted.imag)
+    )
+```
+
+The mathematical operations are the same. The patent risk is the same. The text based signature is completely different. Traditional SCA cannot connect these implementations because the language changed, the function signature changed, the variable names changed, and the structure moved from mutation to return values.
+
 ## When traditional SCA still works
 
 Traditional SCA still has value. It works when the code you check matches public code as-is. If you want to find package level dependencies, validate manifests, or track imports, classic tools do their job. They also work when you expect developers to copy code without rewriting it.
