@@ -123,21 +123,13 @@ def apply_butterfly_transform(sample_a, sample_b, twiddle):
 
 The mathematical operations are the same. The patent risk is the same. The text based signature is completely different. Traditional SCA cannot connect these implementations because the language changed, the function signature changed, the variable names changed, and the structure moved from mutation to return values.
 
-## When traditional SCA still works
+## Why scanners fail on AI output
 
-Traditional SCA still has value. It works when the code you check matches public code as-is. If you want to find package level dependencies, validate manifests, or track imports, classic tools do their job. They also work when you expect developers to copy code without rewriting it.
+AI generated code looks clean. There are no headers, no license markers, and no obvious links to upstream projects. This leads many teams to assume it is original. Yet the model may rebuild known algorithms from GPL, AGPL, or patented sources. It may recreate parts of H.264 or H.265. It may generate DCT, FFT, or motion compensation routines. It may rebuild functions from FFmpeg. It may reproduce data structure logic from old GPL kernels.
 
-They break when models generate the code, because models rewrite everything while keeping the original algorithm.
-
-## Why AI generated code is easy to get wrong
-
-AI generated code looks clean, which leads many teams to assume it is original. There are no headers, no license markers, and no obvious links to upstream projects. Yet the model may rebuild known algorithms from GPL, AGPL, or patented sources. It may recreate parts of H.264 or H.265. It may generate DCT, FFT, or motion compensation routines. It may rebuild functions from FFmpeg. It may reproduce data structure logic from old GPL kernels.
+Traditional scanners compare today's code with older public samples. They only detect shared text. When a model rewrites that text, the scanner no longer sees the source behind it. The tool cannot follow the algorithm across languages or follow control flow when the order of operations moves. It cannot detect when two functions share the same logic but not the same structure. It cannot detect semantic matches or code rebuilt from common algorithm patterns. It cannot identify a patent encumbered routine that was reconstructed in a different style.
 
 You ship the code. Your SCA report says there is no problem. The logic inside the file tells a different story.
-
-## Why scanners fail on real AI output
-
-Text based scanners compare today's code with older public samples. They only detect shared text. When a model rewrites that text, the scanner no longer sees the source behind it. The tool cannot follow the algorithm across languages or follow control flow when the order of operations moves. It cannot detect when two functions share the same logic but not the same structure. It cannot detect semantic matches or code rebuilt from common algorithm patterns. It cannot identify a patent encumbered routine that was reconstructed in a different style.
 
 This gap grows as AI models get better at rewriting code.
 
@@ -172,6 +164,12 @@ Some vendors try to lower risk by training models only on permissive codebases. 
 Developers still combine model output with legacy code. Applications still include old functions that do not appear in public samples. Teams still add code from unknown sources without checking it. Models still rebuild common algorithms that appear in many forms across many projects. Patent encumbered logic is not filtered by license type because patents do not care about source licenses.
 
 The risk may be lower when training data is filtered, but there is no way to prove the absence of all non permissive material. There is also no public dataset that shows the exact difference between permissive only training and mixed training in real world cases. To measure this properly, you would need a large set of model outputs, ground truth provenance, and verified training exclusions. None of this exists today. Because of that, the strongest claim you can make is that the risk is reduced in theory, not eliminated in practice.
+
+## When traditional SCA still works
+
+Traditional SCA still has value. It works when the code you check matches public code as-is. If you want to find package level dependencies, validate manifests, or track imports, classic tools do their job. They also work when you expect developers to copy code without rewriting it.
+
+They break when models generate the code, because models rewrite everything while keeping the original algorithm.
 
 ## Why this matters for your daily work
 
