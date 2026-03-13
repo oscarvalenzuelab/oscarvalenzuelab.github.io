@@ -16,20 +16,21 @@ comments: false
 
 <section>
     <h2>ABOUT</h2>
-    <p>I'm a Principal Engineer and Technical Program Leader who specializes in AI governance, open source compliance, and software supply chain security. Over 15+ years, I've built programs that balance security with innovation, creating frameworks that protect organizations while enabling engineers to move fast.</p>
+    <p>I'm a Principal Engineer turned entrepreneur, building AI and automation solutions for companies navigating the evolving software supply chain landscape. With 15+ years of experience in AI governance, open source compliance, and software security, I now channel that expertise into helping organizations embrace AI-driven transformation.</p>
 </section>
 
 <section>
     <h2>WHAT I DO NOW</h2>
-    <p>At Amazon, I lead technical compliance programs across 20+ engineering organizations, focusing on AI governance, OSS compliance, and software supply chain security. My role combines three things: defining security strategy, leading complex cross-functional programs, and personally building the automation platforms that make it all scale.</p>
-    <p>I'm not just a program leader who tells engineers what to build. I write Python code for production systems, architect ML/AI frameworks, and develop proof-of-concept prototypes based on my research. This "player-coach" approach means I understand the technical constraints and can design solutions that actually work.</p>
+    <p>After a decade at Amazon leading technical compliance programs, I've taken the leap into entrepreneurship. I'm building AI and automation solutions that help companies secure their software supply chains, streamline compliance, and unlock the full potential of modern AI tooling.</p>
+    <p>I also serve as a technical advisor for a pioneering open source company at the forefront of supply chain security—contributing strategic insight to one of the most innovative projects in the space.</p>
+    <p>And honestly? I'm having the time of my life. I studied electronics because I wanted to create robots. I jumped into informatics because I wanted to learn how to teach them. Now, I've come full circle—building and playing with evolutive automatas. There's something deeply exciting about this moment in Agentic AI—autonomous systems that reason, act, and collaborate. Every day brings new experiments, new architectures, and new ways to push what's possible.</p>
 </section>
 
 <section>
     <h2>MY BACKGROUND</h2>
     <p>I started my career in telecommunications as a Specialist Engineer at Telefónica in Chile, managing contractor teams and building OSS/BSS monitoring systems for specialized telecom networks. My background in electronics and informatics gave me a strong foundation in systems thinking and large-scale infrastructure management.</p>
     <p>When I joined Amazon in 2014, I transitioned into program management as a Technical Program Manager for Kindle, leading 30+ engineering teams with 200+ engineers across Seattle, Bangalore, and Beijing. That experience taught me how to coordinate massive, multi-organizational initiatives and align stakeholders with competing priorities.</p>
-    <p>I then moved into security engineering because I wanted deeper technical expertise in an area that was becoming critical. I spent years building compliance automation, conducting M&A due diligence (30+ acquisitions), and establishing policies that became standard practice across Amazon organizations, including AWS, Alexa, Ring, and Lab126.</p>
+    <p>I then moved into security engineering because I wanted deeper technical expertise in an area that was becoming critical. I spent years building compliance automation, conducting M&A due diligence (30+ acquisitions), and establishing policies that became standard practice across multiple business units.</p>
     <p>Now, as a Principal Engineer, I combine all three backgrounds: telecommunications systems experience, program leadership skills to drive enterprise initiatives, and the technical depth to architect and build security solutions.</p>
 </section>
 
@@ -47,7 +48,7 @@ comments: false
         <li>Agentic AI systems for SBOM analysis and vulnerability detection</li>
         <li>M&A security due diligence methodology for 30+ acquisitions</li>
         <li>Policy-as-code enforcement integrated into CI/CD pipelines</li>
-        <li>Organization-wide OSS compliance policies adopted across multiple Amazon business units</li>
+        <li>Organization-wide OSS compliance policies adopted across multiple business units</li>
     </ul>
 </section>
 
