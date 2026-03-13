@@ -7,7 +7,7 @@ categories: [ ai, development, bestpractices ]
 tags: [ai, productivity, development, bestpractices, llm, agentic]
 image: images/posts/ai-practical-use.png
 description: "Practical lessons on using AI effectively in software development without falling into common traps and false expectations."
-featured: true
+featured: false
 comments: false
 ---
 
