@@ -36,8 +36,7 @@ comments: false
 
 <section>
     <h2>INDUSTRY IMPACT</h2>
-    <p>I help shape the future of AI and open source security through standards work. I serve as a board member for OpenChain (ISO/IEC 5230), the Yocto Project, and Software Heritage, contributing to specifications and providing technical input on global standards development.</p>
-    <p>I'm also an international speaker, presenting at conferences across North America, Europe, and Asia on topics like SBOM automation, AI governance, and building compliance programs that scale. Published researcher on AI supply chain security, semantic code analysis, and agentic AI frameworks for compliance automation.</p>
+    <p>I'm an international speaker, presenting at conferences across North America, Europe, and Asia on topics like SBOM automation, AI governance, and building compliance programs that scale. Published researcher on AI supply chain security, semantic code analysis, and agentic AI frameworks for compliance automation.</p>
 </section>
 
 <section>
