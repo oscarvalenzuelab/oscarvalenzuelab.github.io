@@ -22,8 +22,8 @@ comments: false
 <section>
     <h2>WHAT I DO NOW</h2>
     <p>After a decade at Amazon leading technical compliance programs, I've taken the leap into entrepreneurship. I'm building AI and automation solutions that help companies secure their software supply chains, streamline compliance, and unlock the full potential of modern AI tooling.</p>
-    <p>I also serve as a technical advisor for a pioneering open source company at the forefront of supply chain security—contributing strategic insight to one of the most innovative projects in the space.</p>
-    <p>And honestly? I'm having the time of my life. I studied electronics because I wanted to create robots. I jumped into informatics because I wanted to learn how to teach them. Now, I've come full circle—building and playing with evolutive automatas. There's something deeply exciting about this moment in Agentic AI—autonomous systems that reason, act, and collaborate. Every day brings new experiments, new architectures, and new ways to push what's possible.</p>
+    <p>I also serve as a technical advisor for a pioneering open source company at the forefront of supply chain security, contributing strategic insight to one of the most innovative projects in the space.</p>
+    <p>And honestly? I'm having the time of my life. I studied electronics because I wanted to create robots. I jumped into informatics because I wanted to learn how to teach them. Now, I've come full circle, building and playing with evolutive automatas. There's something deeply exciting about this moment in Agentic AI: autonomous systems that reason, act, and collaborate. Every day brings new experiments, new architectures, and new ways to push what's possible.</p>
 </section>
 
 <section>
@@ -31,7 +31,7 @@ comments: false
     <p>I started my career in telecommunications as a Specialist Engineer at Telefónica in Chile, managing contractor teams and building OSS/BSS monitoring systems for specialized telecom networks. My background in electronics and informatics gave me a strong foundation in systems thinking and large-scale infrastructure management.</p>
     <p>When I joined Amazon in 2014, I transitioned into program management as a Technical Program Manager for Kindle, leading 30+ engineering teams with 200+ engineers across Seattle, Bangalore, and Beijing. That experience taught me how to coordinate massive, multi-organizational initiatives and align stakeholders with competing priorities.</p>
     <p>I then moved into security engineering because I wanted deeper technical expertise in an area that was becoming critical. I spent years building compliance automation, conducting M&A due diligence (30+ acquisitions), and establishing policies that became standard practice across multiple business units.</p>
-    <p>Today, I bring all three backgrounds together: telecommunications systems experience, program leadership skills to drive enterprise initiatives, and the technical depth to architect and build security solutions—now applied to building my own ventures.</p>
+    <p>Today, I bring all three backgrounds together: telecommunications systems experience, program leadership skills to drive enterprise initiatives, and the technical depth to architect and build security solutions. Now applied to building my own ventures.</p>
 </section>
 
 <section>
