@@ -31,7 +31,7 @@ comments: false
     <p>I started my career in telecommunications as a Specialist Engineer at Telefónica in Chile, managing contractor teams and building OSS/BSS monitoring systems for specialized telecom networks. My background in electronics and informatics gave me a strong foundation in systems thinking and large-scale infrastructure management.</p>
     <p>When I joined Amazon in 2014, I transitioned into program management as a Technical Program Manager for Kindle, leading 30+ engineering teams with 200+ engineers across Seattle, Bangalore, and Beijing. That experience taught me how to coordinate massive, multi-organizational initiatives and align stakeholders with competing priorities.</p>
     <p>I then moved into security engineering because I wanted deeper technical expertise in an area that was becoming critical. I spent years building compliance automation, conducting M&A due diligence (30+ acquisitions), and establishing policies that became standard practice across multiple business units.</p>
-    <p>Now, as a Principal Engineer, I combine all three backgrounds: telecommunications systems experience, program leadership skills to drive enterprise initiatives, and the technical depth to architect and build security solutions.</p>
+    <p>Today, I bring all three backgrounds together: telecommunications systems experience, program leadership skills to drive enterprise initiatives, and the technical depth to architect and build security solutions—now applied to building my own ventures.</p>
 </section>
 
 <section>
