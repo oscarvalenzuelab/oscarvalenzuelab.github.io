@@ -45,7 +45,7 @@ The output integrates with GitHub Actions. It generates SARIF reports for CI/CD 
 ### What This Means for Your Organization
 Every organization adopting AI faces the same choice. Wait for the first ML supply chain attack to hit your systems. Or start scanning your models today, and share your experience with others so we can improve tooling and research.
 
-<img src="images/posts/bsa_results.png">
+<img src="{{ site.baseurl }}/images/posts/bsa_results.png" alt="BinarySniffer scan results">
 
 BinarySniffer is Open Source under Apache-2.0 and available on GitHub. Feel free to submit comments, recommendations, examples, new signatures, and even feature requests.
 
