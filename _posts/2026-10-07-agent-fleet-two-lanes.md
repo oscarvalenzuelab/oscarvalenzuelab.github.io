@@ -7,7 +7,7 @@ categories: [ ai, agents, automation, engineering ]
 tags: [ai, agents, automation, tmux, ctrlrelay, devops, llm]
 image: images/posts/ai-practical-use.png
 description: "Part one of five on running coding agents across several machines: the interactive lane, the headless lane, the one file they share, and the failure mode each one has."
-featured: true
+featured: false
 comments: false
 ---
 
@@ -41,7 +41,7 @@ The work runs in two lanes:
   - Assigning work based on what each machine can handle.
 - The headless lane: ctrlrelay runs on the Linux PC and watches 85 repositories across three organizations. It handles GitHub Dependabot alerts, security fixes, blocked upgrades, research, feature design, triage, releases, and assigned GitHub issues, following the configured policy and rules. When it needs a decision from me, it asks through Telegram or Mattermost.
 
-Both lanes use the same Git repository for configuration, memory, and fleet data, but they run as separate systems. Each pulls from that repository to get updates. When a pull fails, the machine keeps using its old rules. I've seen a node log 418 failed pulls, including five days without a single configuration update.
+Both lanes use the same Git repository for configuration, memory, and fleet data, but they run as separate systems. Keeping the rules together avoids maintaining a different copy on every machine, and changes go through pull requests. Machines running the sync daemon check for updates every 15 minutes; on the others, I run an update script by hand. A failed pull leaves the old rules in place. I've seen a node log 418 failed pulls, including five days without a configuration update.
 
 ## The interactive lane
 
@@ -59,6 +59,8 @@ On each machine I cloned the repos I work on, grouped by organization into their
 I have some rules based on how each of the agents operate, for example the fleet keeps one session per folder, because `--continue` picks up the latest conversation in whatever directory you are in. Two sessions in the same directory will fight over the same conversation history and the same files. I do sometimes have two agents working on the same project, but never on the same machine. In some cases the agent could spin additional agents working on separate worktrees, but once the work is done, the agent clean up and consolidate the memory, to avoid future conflicts.
 
 Sessions are not spread evenly. The coordinator is an old Linux laptop with 4 GB of RAM, and each session uses a few hundred megabytes, so it runs only the three org-level sessions, with no per-project ones. It also has a hard rule against running test suites, which I'll cover in part three of this series. That machine is my interface to the fleet and keeps the other nodes talking to each other.
+
+Updating the files on disk doesn't refresh the rules a running session loaded at startup. Long-running sessions can therefore keep using old instructions until they restart. Part four covers that failure and why I now ask agents to read the file on disk before reporting a configuration error.
 
 Most of my tuning time has gone into making sure the fleet keeps working in coordination. Having me in the loop doesn't solve the oversight problem: the fleet still has to know when to ask for help, and I have to know when something is waiting on me. From outside a tmux pane, an agent thinking for ninety seconds looks the same as one waiting for an answer or stuck on a prompt.
 
@@ -80,28 +82,9 @@ Each task reports whether it finished, failed, or needs my input. That lets me k
 
 My part in this lane is to set the rules, answer questions from the coding agent through Telegram or Mattermost, and review the resulting pull requests. The agents handle the coding and testing between those points. I still need to make time for the questions they send: a task that needs my decision stays blocked until I answer.
 
-A shared Git repository holds the rules, skills, and configuration files for every agent session. The headless daemon syncs them to `~/.claude/` every 15 minutes:
+In this lane, ctrlrelay handles the scheduled sync, copying the shared rules, skills, and configuration into `~/.claude/`.
 
-```yaml
-schedules:
-  personalization_cron: "*/15 * * * *"
-
-personalization:
-  repo: "<owner>/<policy-repo>"
-  paths:
-    - source: "global/CLAUDE.md"
-      target: "~/.claude/CLAUDE.md"
-    - source: "global/skills/gh-dashboard/"
-      target: "~/.claude/skills/gh-dashboard/"
-```
-
-If I push a change to the policy repo, and any machine running the daemon picks it up within 15 minutes. On the others, I run an update script by hand. I have to keep track of which machines are updating automatically.
-
-Keeping the rules in one repo helps me avoid maintaining a slightly different copy on every machine. Changes go through pull requests, just like application code.
-
-The original rules file grew to over 2,600 lines. Every call loaded it into context, even when most of it didn't apply to the task. We switched to a trigger table for skills to reduce that token cost. Part four covers the numbers and how we changed the setup.
-
-A running session keeps the rules it loaded at startup. A fix can reach the machine's disk in 15 minutes and still go unread until the session restarts. During testing, an agent reported a renewed credential as expired and flagged a skill file as outdated an hour after the fix was merged. The rule now is to read the file on disk and quote what's actually there before reporting a configuration error.
+## What the rest of the series covers
 
 Part two follows the headless pipeline from an incoming task to a pull request. It covers the checkpoint protocol, the CI wait commands and their exit codes, and two fetch bugs in the sync layer.
 
