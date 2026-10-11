@@ -1,7 +1,7 @@
 ---
 layout: post
 permalink: /2026/10/agent-fleet-two-lanes.html
-title:  "An Agent Fleet Has Two Lanes, and They Fail Differently"
+title:  "Building and Managing an AI Agent Fleet: Orchestrating Autonomous Intelligence at Scale"
 author: oscar
 categories: [ ai, agents, automation, engineering ]
 tags: [ai, agents, automation, tmux, ctrlrelay, devops, llm]
@@ -11,55 +11,76 @@ featured: true
 comments: false
 ---
 
-Part 1 of five on running an AI agent fleet.
+A friend asked how I use AI day to day. I started replying in chat, but four paragraphs in, I realized I needed more room, and it's a very good excercise as backup in case I forget how everything is wired. The answer involves the machines I use, how I assign work, and what happens when an agent gets stuck. So I'm writing a series about the setup I actually run.
 
-A friend asked me how I actually use AI day to day. I started answering in a chat window and gave up four paragraphs in, because the honest answer has configuration files in it, and a chat window turns configuration files into advice. So here are five posts instead.
+I don't run Hermes, Grok bot, or heavy multi-agent frameworks. Working in security taught me to pay attention to what I centralize, because it becomes a target. Complex infrastructure also takes time to maintain. My setup is simpler and cheaper: regular agents on Linux and Mac machines, with prompts that give each agent a role, and a single entry point for my interactions that act as program manager and mission control.
 
-What runs right now: 21 long-lived agent sessions configured across three machines, and a daemon on one of those machines watching 87 repositories for work that nobody is sitting in front of. Those are two separate systems. They share one git repository, and they break in opposite directions.
+Each machine keeps its own keys, local clones, and agent sessions. The agents run on those machines. One coordination agent assigns the work, but it holds no secrets. If it goes down, work stops. If it gets compromised, it still doesn't have my GitHub tokens.
+
+Here’s my hardware setup right now:
+
+- Four machines:
+  - Linux laptop 4 GB RAM (SSH access to other nodes, fleet coordination, and 3 of the agent sessions)
+  - MacBook Pro M4 Pro 24 GB RAM (coding, UI/CX testing, iOS/Apple development, model fingerprinting, Software Composition Analysis)
+  - MacBook Pro M1 Max 64 GB RAM (the fleet's Ollama host: serves local models to every other machine over the LAN, and runs nothing else)
+  - Linux PC 32 GB RAM / RTX 5060 8 GB VRAM (local models, GitHub Actions, security analysis, software testing)
+
+ The coding and review loop:
+
+I use two LLM coding providers: Claude Code (Anthropic) with a Max subscription, and Codex (OpenAI) with a PRO subscription. Claude handles coding and planning, while Codex handles adversarial testing: looking for ways the changes might fail.
+
+I mostly code with Sonnet and Opus. When a problem gets more complex, or the review loop goes past five iterations, the fleet coordinator escalate to Fable or Astra. For testing, I use Sol or Terra, depending on the work.
+
+The review loop covers selected files, formats, and artifacts. This is part of each iteration, and I'll describe the full loop in a future post.
+
+The work runs in two lanes:
+
+- The interactive lane: 21 long-running agent sessions spread across three of the four machines, working as a team. A coordination agent called "TPM" handles:
+  - Each agent's role, skills, and plugins, and communication between machines.
+  - Providing context, managing memory, and measuring and clearing the context window.
+  - Assigning work based on what each machine can handle.
+- The headless lane: ctrlrelay runs on the Linux PC and watches 85 repositories across three organizations. It handles GitHub Dependabot alerts, security fixes, blocked upgrades, research, feature design, triage, releases, and assigned GitHub issues, following the configured policy and rules. When it needs a decision from me, it asks through Telegram or Mattermost.
+
+Both lanes use the same Git repository for configuration, memory, and fleet data, but they run as separate systems. Each pulls from that repository to get updates. When a pull fails, the machine keeps using its old rules. I've seen a node log 418 failed pulls, including five days without a single configuration update.
 
 ## The interactive lane
 
-Each machine starts a set of tmux sessions at boot, one per folder. An org-level folder gets a session, and the repositories I work in most get their own. The launcher is a bash script that systemd calls on the Linux box and launchd calls on the laptops:
+On each machine I cloned the repos I work on, grouped by organization into their own folders. At boot, each machine starts a tmux session per folder: one for the org-level folder, plus separate ones for the repos I edit most. A bash script does the setup, started by systemd on Linux and launchd on macOS:
 
 ```bash
 # fleet-up: start this machine's Claude sessions inside tmux, each with Remote Control.
 #
-#   fleet-up            start any missing sessions, then report ones waiting for input
-#   fleet-up status     show every configured session and its state
+# fleet-up start any missing sessions, then report ones waiting for input
+# fleet-up status show every configured session and its state
 #
-# Config: ~/.config/fleet/sessions, one per line:   <name>  <path>
+# Config: ~/.config/fleet/sessions, one per line: <name> <path>
 ```
 
-One session per folder matters because `--continue` resumes the most recent conversation in that directory. Two sessions in one folder means two agents racing for the same conversation history and the same working tree.
+I have some rules based on how each of the agents operate, for example the fleet keeps one session per folder, because `--continue` picks up the latest conversation in whatever directory you are in. Two sessions in the same directory will fight over the same conversation history and the same files. I do sometimes have two agents working on the same project, but never on the same machine. In some cases the agent could spin additional agents working on separate worktrees, but once the work is done, the agent clean up and consolidate the memory, to avoid future conflicts.
 
-Sessions are not distributed evenly. The coordinator box has 3.7 GB of RAM, and its sessions file carries the reason in a comment: roughly 290 MB per session, so org level only, no per-project sessions. That machine also has a hard rule against running test suites, which I will come back to in part three.
+Sessions are not spread evenly. The coordinator is an old Linux laptop with 4 GB of RAM, and each session uses a few hundred megabytes, so it runs only the three org-level sessions, with no per-project ones. It also has a hard rule against running test suites, which I'll cover in part three of this series. That machine is my interface to the fleet and keeps the other nodes talking to each other.
 
-A human is in the loop in this lane, which sounds like it makes supervision easy. It does the opposite. The failure mode here is a session that goes quiet, and from outside a tmux pane there is no difference between an agent thinking for ninety seconds, an agent waiting for an answer to a question it asked, and an agent frozen on a modal dialog. All three render as a static screen. The launcher's own comments say so:
+Most of my tuning time has gone into making sure the fleet keeps working in coordination. Having me in the loop doesn't solve the oversight problem: the fleet still has to know when to ask for help, and I have to know when something is waiting on me. From outside a tmux pane, an agent thinking for ninety seconds looks the same as one waiting for an answer or stuck on a prompt.
 
-```bash
-# Whether claude is still running in the window. When it exits the window stays open
-# on a shell (and its old screen), so the window existing proves nothing.
-```
+Early on, I found two sessions stuck on the same dialog, twelve hours apart. Both had finished their work, but both were still holding background shells they had started, read from, and never closed. When the exit command came, the tool stopped on "Background work is running" and waited for a keypress from a user who never arrived. I caught the first one by chance. I found the second only after I taught the health check to read the pane's footer; by then, it had spent hours looking busy while doing nothing at all.
 
-On 20 September we found two sessions wedged on the same dialog, twelve hours apart. Both had finished their work. Both were holding background shells they had started, read the output of, and never closed, so when `/exit` was typed Claude Code stopped on "Background work is running" and waited for a keypress that nobody was going to press. One was noticed because somebody happened to look at the pane. The other was found only after the health check was taught to read the dialog footer. Twelve hours of a machine looking busy while holding nothing.
+The fleet has a heartbeat, or tick, mechanism that checks each agent's state and the changes being made to the code. The health check now recognizes that stuck state and tells the coordinator about it, but leaves the dialog alone: the session might be waiting on a real question, and clearing it could lose that question before I answer. The fleet can clear a session with nothing outstanding; if a dialog is open, it asks me to look.
 
-Every interactive-lane problem I have had has that shape. The work was finished and the output was fine. The pane stopped, and a stopped pane looks identical to a working one.
+Getting those checks and handoffs right has taken more of my time than making the fleet faster.
+
+What surprised me is where the problems actually live. The agents do the work fine. They write the code, run the tests, and open the pull requests. What I had to engineer was the handoff: knowing when one is done, when it needs me, and when it has quietly finished and forgotten to say so. That is the part nobody warns you about, and it is the part worth building.
 
 ## The headless lane
 
-The other lane has no human in it at all. A daemon polls GitHub, and when an issue is assigned or carries the right label it takes a per-repository lock in SQLite, cuts a worktree from a bare mirror, runs an agent against the issue, and opens a pull request. The agent reports by writing a small JSON checkpoint with one of three statuses, `DONE`, `BLOCKED_NEEDS_INPUT`, or `FAILED`. The file is written to a temporary path and renamed into place, because the orchestrator has to be able to restart and still read where everything got to.
+The headless lane handles work without someone sitting at a terminal. It still asks me when a decision needs human input. I'll cover the setup in part two; here, I want to explain how it works.
 
-That daemon is [ctrlrelay](https://github.com/AInvirion/ctrlrelay), Apache 2.0, currently 0.12.2. Part two is entirely about it.
+The headless lane runs on [ctrlrelay](https://github.com/AInvirion/ctrlrelay), an open source project that runs as a background daemon. It polls GitHub for issues assigned to it or tagged with specific labels. When it picks up an issue, it adds a comment to let others know it has taken the task, creates a worktree, and runs an agent on it. Once the work is done and the verification and testing loop is complete, it opens a pull request.
 
-The headless lane fails by looking busy, which is worse. The clearest example is in the changelog for version 0.5.0, dated 11 May 2026. A security sweep ran across 86 repositories. Twenty-one of those sessions hit `BLOCKED_NEEDS_INPUT`, meaning the agent stopped, decided it needed a human, and said so in its checkpoint. The number of messages that reached me was zero. Twenty-one agents asked for help into a bridge that was not wired up on that path, and the sweep reported as a sweep that ran.
+Each task reports whether it finished, failed, or needs my input. That lets me keep track of work across repositories without opening a terminal for every agent.
 
-Getting the messages flowing was the easy half. The hard half showed up four months later, in 0.9.0, dated 7 September 2026, when I measured what happened to the questions after they arrived. On one deployment: 46 questions posted, 4 ever answered, 16 still sitting live, and five repositories re-asking the same question on consecutive days. Rows that recorded a pending question were deliberately built to outlive the session that asked, so a late reply could still restart the work. Nothing ever retired one, so the table only grew.
+My part in this lane is to set the rules, answer questions from the coding agent through Telegram or Mattermost, and review the resulting pull requests. The agents handle the coding and testing between those points. I still need to make time for the questions they send: a task that needs my decision stays blocked until I answer.
 
-The code fix was a time-to-live on unanswered questions, defaulting to 48 hours, so an expired question stops being offered as the routing target for a stray reply. That part was small. The finding was that I had built a careful escalation path to a person who was not reading it, and the system had no way to tell me, because from the daemon's side a question asked and a question answered look the same until somebody counts the rows.
-
-## The one file both lanes share
-
-A single git repository holds the rules file, the skills, and the settings that every session on every machine reads. It is applied to `~/.claude/` by the same daemon that runs the headless lane:
+A shared Git repository holds the rules, skills, and configuration files for every agent session. The headless daemon syncs them to `~/.claude/` every 15 minutes:
 
 ```yaml
 schedules:
@@ -74,26 +95,22 @@ personalization:
       target: "~/.claude/skills/gh-dashboard/"
 ```
 
-Edit in the repository, push, and every machine where the daemons are loaded picks it up within fifteen minutes. On machines where they are not loaded, a restore script does it by hand, and knowing which machine is in which state is part of the job rather than a detail.
+If I push a change to the policy repo, and any machine running the daemon picks it up within 15 minutes. On the others, I run an update script by hand. I have to keep track of which machines are updating automatically.
 
-The reason policy is centralized is that the alternative is three machines with three slightly different rulebooks and no way to tell which one an agent was following when it did something surprising. Policy changes go in by pull request, same as code.
+Keeping the rules in one repo helps me avoid maintaining a slightly different copy on every machine. Changes go through pull requests, just like application code.
 
-The reason it is a trigger table of skills rather than one long document is cost, and that is a measurement rather than a preference. The always-resident rules file reached about 2,600 lines, read on every call by every session, and most of it did not apply to most calls. Part four has the numbers and the redesign.
+The original rules file grew to over 2,600 lines. Every call loaded it into context, even when most of it didn't apply to the task. We switched to a trigger table for skills to reduce that token cost. Part four covers the numbers and how we changed the setup.
 
-Centralizing the rules introduced its own failure, which is worth saying now because it is unintuitive: a running session holds what it read at startup. A fix pushed to that repository reaches the disk on every machine in fifteen minutes and reaches a live session only when the session restarts. On 19 and 20 September this misled us twice in two days, once with a credential that had already been renewed still being reported as expired, and once with a skill reported as stale an hour after the fix was pushed and pulled. From inside a session there is no way to tell a stale copy from a current one, so the rule now is to read the file on disk and quote what is actually there before reporting it as out of date.
+A running session keeps the rules it loaded at startup. A fix can reach the machine's disk in 15 minutes and still go unread until the session restarts. During testing, an agent reported a renewed credential as expired and flagged a skill file as outdated an hour after the fix was merged. The rule now is to read the file on disk and quote what's actually there before reporting a configuration error.
 
-## What the rest of the series covers
+Part two follows the headless pipeline from an incoming task to a pull request. It covers the checkpoint protocol, the CI wait commands and their exit codes, and two fetch bugs in the sync layer.
 
-Part two is the headless pipeline end to end: the checkpoint protocol, why a CI wait had to become a first-class command with real exit codes, and two fetch bugs that sat on opposite sides of the same line of code, one noisy and one silent.
+Part three covers how I spot stuck terminal sessions, assign work based on what each machine can handle, and keep the agents' context windows from growing too large.
 
-Part three is the interactive lane: detecting a wedged session without false positives, routing work by machine capability, and the measurement that showed six sessions carrying an average of 400,651 tokens of context each.
+Part four covers the policy repo: the skill trigger table, when agents ask for help, the format they use to report their work, and what happened when the number of assigned issues suddenly grew.
 
-Part four is the policy repository: the trigger table, the escalation model, the report format that every session uses, and what happened the day issue count went from 20 to 38.
+Part five is about checking the numbers I get from the fleet. It covers misleading measurements, test suites running against the wrong source tree, build environment mismatches, and why Git status alone can't tell me whether a pull request was merged.
 
-Part five is about trusting numbers. Four separate cases in one day where a measurement was confidently wrong, a test suite that was testing the wrong source tree, and why "is my work merged" has no correct answer in git alone.
+In both lanes, an agent can stop working while everything around it still looks normal. Most of the tooling I've built is there to catch that moment and tell me something needs attention.
 
-Both lanes fail by being silent, and silence is the one state that reads as healthy from outside. Nearly everything I have built around these agents exists to make a stopped one say so.
-
----
-
-*The views expressed in this document are solely my own and do not represent those of my current or past employers. If you identify an error, please contact me, and I will make the necessary updates.*
+The views expressed in this document are solely my own and do not represent those of my current or past employers. If you identify an error, please contact me, and I will make the necessary updates.
