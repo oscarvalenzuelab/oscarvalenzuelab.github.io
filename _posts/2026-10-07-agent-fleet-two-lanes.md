@@ -88,7 +88,7 @@ What surprised me is where the problems actually live. The agents do the work fi
 
 ## The headless lane
 
-The headless lane handles work without someone sitting at a terminal. It still asks me when a decision needs human input. Part two follows it step by step; here is the short version.
+The headless lane handles work without someone sitting at a terminal. It still asks me when a decision needs human input. [Part two](/2026/10/github-issue-to-pr-headless.html) follows it step by step; here is the short version.
 
 The headless lane runs on [ctrlrelay](https://github.com/AInvirion/ctrlrelay), an open source project that runs as a background daemon. It polls GitHub for issues assigned to it or tagged with specific labels. When it picks up an issue, it adds a comment to let others know it has taken the task, creates a worktree, and runs an agent on it. Once the work is done and the verification and testing loop is complete, it opens a pull request.
 
@@ -102,7 +102,7 @@ In both lanes, an agent can stop working while everything around it still looks 
 
 ## What the rest of the series covers
 
-Part two follows the headless pipeline from an incoming task to a pull request. It covers the checkpoint protocol, the CI wait commands and their exit codes, and two fetch bugs in the sync layer.
+[Part two](/2026/10/github-issue-to-pr-headless.html) follows the headless pipeline from an incoming task to a pull request. It covers what the agent may pick up, the rules it works under, the review loop, and how its questions reach me.
 
 Part three covers how I spot stuck terminal sessions, assign work based on what each machine can handle, and keep the agents' context windows from growing too large.
 
