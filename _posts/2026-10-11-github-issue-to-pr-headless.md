@@ -85,8 +85,6 @@ When the agent stops, it leaves a short note in a file: done, stuck with a quest
 
 Without that note, a finished agent and a crashed agent look exactly the same. For example, say I approve some work and the agent picks it back up. It merges three of four pull requests, then exits without leaving a note. From the outside, that looks like a failure, even though most of the work landed. That is why every set of instructions the agent gets, including the short one for picking work back up, carries the same rule about the note.
 
-That is what headless failures usually look like. Not a wrong answer, which I would catch, but a tidy report, delivered on time, about something other than what happened.
-
 ## The rules the agent works under
 
 The numbered workflow is only part of what the agent reads. ctrlrelay also syncs my shared rules and skills into `~/.claude/` from the same Git repository the interactive lane uses, so the headless agent starts with the same rules as the sessions I drive by hand. Part four covers how that rulebook is organized.
