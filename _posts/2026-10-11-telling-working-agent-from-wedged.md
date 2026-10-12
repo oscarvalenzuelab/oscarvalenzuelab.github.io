@@ -6,71 +6,67 @@ author: oscar
 categories: [ ai, agents, automation, engineering ]
 tags: [ai, agents, tmux, monitoring, observability, automation, llm]
 image: images/posts/agent-fleet-part3.png
-description: "The interactive half of an agent fleet: how I tell a session that is thinking from one that is waiting on me or stuck, and the rules that keep long-running sessions healthy."
+description: "The interactive half of an agent fleet: the roles, how work is handed out and tracked, and how I know which of 21 sessions actually needs me."
 featured: false
 comments: false
 ---
 
-Part 3 of five on running an AI agent fleet. [Part 1](/2026/10/agent-fleet-two-lanes.html) covered the two lanes and the rulebook they share, and [part 2](/2026/10/github-issue-to-pr-headless.html) reviewed in details the headless lane.
+Part 3 of five on running an AI agent fleet. [Part 1](/2026/10/agent-fleet-two-lanes.html) covered the two lanes and the rulebook they share, and [part 2](/2026/10/github-issue-to-pr-headless.html) reviewed the headless lane in detail.
 
-This is the lane with sessions I talk to directly (thorught a central coordinator). A session thinking for ninety seconds, a session that asked me something an hour ago, and a session stuck on a dialog it cannot dismiss all look the same on screen: a window with text in it and nothing moving.
+This is the lane with sessions I talk to directly, through a central coordinator. With 21 of them open at once, I can't watch every window, so I need to know which ones need me. At any moment, a session is doing one of three things: working on a task, waiting for me to answer a question, or stuck on something it can't get past on its own.
 
-This post is about how I tell them apart.
+From the outside, all three look the same: a terminal with text on the screen and nothing changing. This post explains how the lane is organized so that I only get pulled in when a session actually needs me: who does what, how work is handed out and tracked, and how the fleet tells those three states apart.
 
-## How it is put together
+## The roles
 
-The interactive lane has four parts:
+There are three roles, and every session runs the same model. What separates them is what each one is allowed to decide.
 
-- **The launcher** is the script from part one. At boot it starts one Claude Code session per folder inside tmux, 21 in all across three machines, and restarts any that have exited.
-- **The health check** looks at every session and sorts it: working, waiting for input, stuck on a dialog, or exited.
-- **The coordinator** is the TPM session from part one. It hands out work, reads what the health check reports, and tells me when something needs a person.
-- **The context tool** watches how much each session is carrying and clears the ones that have finished their work.
+- **The coordinator** is a session called TPM, short for technical program manager. It hands out work, answers the workers' questions, and makes the everyday decisions: design choices inside a ticket, the order things merge in, priority, and scope.
+- **The workers** are the other sessions, one per repository folder. A worker takes one ticket at a time, in its own git worktree and branch, and cleans both up when the ticket lands.
+- **I** decide a short, closed list of things: money, a customer-visible risk, anything irreversible or public, licensing, and work outside the current milestone.
 
-Every session also has a Remote Control name, so I can open any of them from my phone and answer it there.
+Questions go from a worker to the coordinator, and only reach me if the coordinator can't settle them. Part four covers these decision rights in detail, including the one case where a worker is expected to say no to the coordinator.
 
-## The window existing proves nothing
+## How work is handed out
 
-When an agent exits, tmux keeps its window open and drops it to a shell, and the shell still shows the agent's last screen. So the window is still there, still showing a conversation, and still looking exactly like work in progress.
+Work goes to a machine because it can handle it, not because it is free. Each machine has a role:
 
-So the launcher doesn't trust the window. It asks the operating system which program is actually running in that window, and only counts the session as alive if that program is Claude Code. Even the way it asks matters: on macOS, one common way of listing processes sometimes misses them, and an empty answer looks exactly like "nothing is running". Part five comes back to that idea: a check should look at the thing itself, not at something that only resembles it.
+- The coordinator runs on an old laptop with 4 GB of memory. It coordinates and nothing else: no test suites, no builds. At roughly 290 MB per session, it runs three, one per organization.
+- The MacBook Pro with 24 GB is for development and testing. It runs ten sessions, including one for each repository I work on most.
+- The Linux PC runs the headless lane from part two, plus eight interactive sessions for development and testing.
+- The 64 GB MacBook only serves local models and runs no sessions.
 
-## Match the screen, not the words
+A launcher, the script from part one, starts each machine's sessions at boot inside tmux and restarts any that have exited. Every session has a Remote Control name, so I can open any of them from my phone.
 
-Deciding that a session is waiting for me was harder than it looked. An early version looked for phrases like "do you want to", and flagged a session whose reply to me said "What do you want to look at?" An agent that talks about prompts and questions will trip any check built on the words of prompts and questions.
+## Rules and skills
 
-The fix was to stop reading what the screen says and look at how it is built. Real dialogs always end with the same fixed line at the bottom, like "Enter to confirm · Esc to cancel". The check looks only for a short list of those exact lines, and only in the last few lines of the screen. Part one shows the code.
+Every session reads the same rulebook, synced from one Git repository, so a rule I change reaches all 21 sessions. The rulebook is kept short on purpose. The detailed rules live in skills, and each skill is tied to a moment: before running a test suite, before merging, before opening an issue, before clearing a session. A session loads a skill when it reaches that moment, instead of carrying every rule all the time. Part four covers how that is organized and why.
 
-That matters for security too. An agent can print any text at all, including the phrase a check is looking for, so the check stays narrow: a few exact lines, in the one place a dialog puts them.
+## How a session shows its work
 
-## A session that finished but cannot leave
+A session's work has to be visible on GitHub, not just in its own conversation. When it picks up an issue, it claims it on the issue itself, with a comment saying which machine and branch are on it, and an `agent:working` label it removes when it stops. It pushes its branch early, because a branch that only exists on one machine is invisible to everyone else. That is how two sessions avoid editing the same file.
 
-A session can finish its work and still be stuck. For example, an agent starts a small background job to keep an eye on a CI run, reads the result, and never stops the job. When it is later told to exit, Claude Code shows "Background work is running" and waits for a keypress that nobody will send. From outside, that window looks busy. It is not working, and it is not waiting on me. It is stuck.
+When it reports to the coordinator, it uses five short lines: the state of the ticket, the commit, the exact test count, the files it is holding, and the one decision it needs. Part four has the format. On some repositories a worker can merge its own work once it has been reviewed and the tests pass. On others it stops at the pull request, and I merge it.
 
-The background job can make it worse. One that kept a session stuck for hours asked GitHub every 25 seconds whether a CI run had finished, and was meant to stop when the answer was "completed". But it ran in a folder that was not a git repository, so the GitHub command failed every time and returned nothing. Nothing is never "completed", so the job could never end, and from outside it looked exactly like one patiently waiting on slow CI. The agent had even seen the GitHub error earlier and decided it was harmless. Nothing hid it; it was read and dismissed.
+## Keeping track: working, waiting, or stuck
 
-The health check now spots that exit dialog and tells the coordinator. It does not press the key itself, because a session might be waiting on a real question. The rules that came out of it are simple: stop a background job as soon as you have read its result, give every waiting loop a time limit, and run GitHub commands from inside the repository so they cannot fail quietly.
+A health check looks at every session and sorts it into one of four states: working, waiting for input, stuck, or exited. Two ideas make that work.
+
+First, it never trusts the window. When an agent exits, tmux keeps its window open on a shell that still shows the last screen, so an exited session looks like one in progress. The check asks the operating system which program is actually running in that window.
+
+Second, it reads how the screen is built, not what it says. Real dialogs always end with the same fixed line at the bottom, like "Enter to confirm · Esc to cancel", so the check looks for those exact lines in the last few lines of the screen. Looking for words like "do you want to" does not work, because an agent can use those words in a normal reply.
+
+When the check finds a session stuck on a dialog, for example one that finished its work but is waiting for a keypress before it can exit, it tells the coordinator. It does not press the key itself, because the session might be waiting on a real question. The coordinator then tells me, and I answer from my phone.
 
 ## Keeping sessions healthy
 
-Two rules keep sessions from failing in slower ways.
+Everything a session has said and read stays in its context, and all of it is read again on every call. A session that finishes one task and moves on to the next carries the whole first task along, and across 21 sessions that adds up fast. When I measured, trimming the busiest sessions would have cut about a quarter of the fleet's usage.
 
-The first is about machines. Work goes to a machine because it can handle it, not because it is free. The coordinator is an old laptop with 4 GB of memory, and the rules forbid running test suites or builds there: a full test suite ran out of memory on it twice, the second time with nothing else running. Memory also decides how many sessions a machine gets. At roughly 290 MB each, the coordinator runs three, and the laptop with 24 GB runs ten.
-
-The second is about context: everything a session carries from earlier in its conversation. All of it is read again on every call. When I measured, six of the busiest sessions were each carrying about 400,000 tokens, and one was over 800,000. Trimming them to around 150,000 would have cut roughly a quarter of the fleet's usage, without losing anything they needed.
-
-So sessions clear between unrelated tasks, compact when the thread still matters, and never do either in the middle of a task. Anything that exists only in the conversation, like a decision, a constraint, or a measurement, gets written to a file first, because once it is cleared it is gone. The context tool does this from outside, and it refuses to clear a session that is mid-task, holding a dialog, has text typed in, or has an open pull request. It has one blind spot: a session waiting on my answer looks just like one that is done. So a session that is waiting on me says so in its last line.
-
-## A claim is a pushed branch
-
-When a session picks up an issue, everyone else needs to know, me and the other sessions alike. A chat message saying "I'm on it" is invisible on GitHub and gone when the conversation clears. A branch that only exists on one machine is invisible too. That is how two sessions end up editing the same file.
-
-So a claim goes on the issue itself, as a comment and a label. And a claim alone is not enough. An issue marked as taken with nothing pushed is worse than an unclaimed one, because it stops anyone else from picking it up. A pushed branch is the honest signal: one command, visible to everyone, and it survives a restart. Part four covers the report format every session uses, which is built around the same idea.
+So sessions clear their context between unrelated tasks, and compact it when the thread still matters, but never in the middle of a task. Anything that exists only in the conversation, like a decision or a measurement, gets written to a file first. A context tool does this from outside, and it refuses to clear a session that is mid-task, holding a dialog, has text typed in, or has an open pull request. A session that is waiting on me says so in its last line, because otherwise it looks just like one that has finished.
 
 ## My part
 
-Supervising this lane has little to do with how good the agents are. A stopped session and a working one look the same, and everything above is a way of making them look different.
-
-My part is to answer when the coordinator says a session needs me, often from my phone through Remote Control, and to review what the sessions produce. The health check, the context tool, and the claim rules exist so that I only get pulled in when a person is actually needed.
+With all of this in place, my part is small. I set the rules, answer what the coordinator brings me, usually from my phone, and decide the few things that are mine to decide. Everything above exists so that I only get pulled in when a person is actually needed.
 
 Part four of this series covers the rulebook all these sessions read, and how it is organized.
 
