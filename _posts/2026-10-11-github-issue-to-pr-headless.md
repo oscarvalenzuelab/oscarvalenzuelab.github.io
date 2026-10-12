@@ -89,7 +89,7 @@ Without that note, a finished agent and a crashed agent look exactly the same. F
 
 The numbered workflow is only part of what the agent reads. ctrlrelay also syncs my shared rules and skills into `~/.claude/` from the same Git repository the interactive lane uses, so the headless agent starts with the same rules as the sessions I drive by hand. Part four covers how that rulebook is organized.
 
-The prompt adds a few rules of its own. If the issue's comments disagree with its body, the comments win, because nobody goes back and edits the body after changing their mind in the thread. If the two can't be reconciled, the agent asks instead of picking one. The security sweep is fenced to the three things listed earlier: open Dependabot alerts, pull requests opened by Dependabot, and my own pull requests that turn Dependabot on. A stranger's pull request is not its business, so it never goes looking for one.
+The prompt also sets a few rules of its own. If the comments on an issue say something different from the issue itself, the agent follows the comments, since that is usually where people change their minds. If it can't tell which one is right, it asks me. The security sweep only touches Dependabot's work and my own Dependabot setup. It never looks at anyone else's pull requests.
 
 ## The review loop
 
