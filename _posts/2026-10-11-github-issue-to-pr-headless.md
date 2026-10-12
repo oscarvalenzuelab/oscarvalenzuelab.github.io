@@ -11,7 +11,7 @@ featured: false
 comments: false
 ---
 
-Part 2 of five on running an AI agent fleet. [Part 1](/2026/10/agent-fleet-two-lanes.html) covered the two lanes and why each one fails differently.
+Part 2 of five on running an AI agent fleet. [Part 1](/2026/10/agent-fleet-two-lanes.html) covered the two lanes and the rulebook they share.
 
 This post is about the headless lane. An issue gets assigned on GitHub, and some time later a pull request appears with tests and a description. Nobody watched a terminal for any of it. If a decision is needed, the agent escalates a question to me, the human in the loop, and once I answer, the work continues from that decision.
 
@@ -31,9 +31,9 @@ CTRLRelay (Control Relay) is a few small parts running on one Linux/MacOS machin
 
 Work comes in through two gates, and each one has its own rules.
 
-The first is issues. Before any agent runs, the poller decides which issues it may take. That check is code, not prompt, so nothing written in an issue can talk its way past it. On every repository, an issue needs two things: it is assigned to me, and it carries the `ctrlrelay:auto` label. Assignment alone was too loose: old self-assigned reminders, like "look into pricing", would go into the pipeline the first time the poller saw a repository. A `manual`, `operator`, or `instruction` label always wins and keeps the agent off the issue.
+The first is GitHub issues. Before any agent runs, the poller decides which issues it may take. That check is defined configuration, not prompt, so nothing written in an issue can talk its way past it. On every repository, an issue needs two things: it is assigned to me, and it carries the `ctrlrelay:auto` label. Assignment alone was too loose: some accidental self-assigned tasks would go into the pipeline the first time the poller saw a repository. A `manual`, `operator`, or `instruction` label always wins and keeps the agent off the issue.
 
-The second is the security sweep, which runs every morning at six on every repository, with no assignment and no label. It looks only at open Dependabot alerts, pull requests opened by Dependabot, and my own pull requests that turn Dependabot on. That is the work the Dependabot keys below are for.
+The second is the security sweep, which runs every morning at 6 AM on every repository listed in the configuration, even when no GitHub issues are assigned to me. It looks only at open Dependabot alerts, pull requests opened by Dependabot, and my own pull requests that turn Dependabot on. That is the work the Dependabot keys below are for.
 
 Per-repository policy is a short config block:
 
@@ -55,11 +55,11 @@ The Dependabot keys work differently from the labels. They are not checked in co
 
 Credentials are referenced by environment variable name, never by value. The config holds `bot_token_env: "CTRLRELAY_TELEGRAM_TOKEN"` and the process reads the name. That is a small thing that makes the config file committable, which is what makes a new machine a ten-minute job.
 
-## The pipeline
+## The End to End pipeline
 
 From my side it looks like this. I assign an issue to myself on GitHub and add the `ctrlrelay:auto` label. ctrlrelay comments on the issue to say it took it, so anyone else looking knows. If the issue is unclear, I get a question on Telegram or Mattermost, and the work waits for my answer. Otherwise, some time later a pull request shows up with tests and green CI. The agent doesn't merge it. That part stays with me.
 
-Under the hood, the agent is given a numbered workflow, and the wording matters more than it looks:
+Under the hood, the agent is given a numbered workflow:
 
 ```text
 1. Validate the issue still applies to the current codebase
