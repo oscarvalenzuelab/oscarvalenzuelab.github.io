@@ -117,7 +117,7 @@ The second was a pair of fetch bugs, two days apart. ctrlrelay's fetch refuses t
 
 Back to the number from part one. On one deployment, 46 questions were posted to the chat bridge, 4 were ever answered, and 16 were still sitting live. Every piece of machinery above is there so an agent can ask. None of it makes anyone read.
 
-Writing the code was never the part that needed engineering. The lock, the note, the three exit codes, and the fetch fix are all machinery for one job: making sure that when an agent stops, something says so.
+Writing the code was never the part that needed engineering. The lock, the note, the three answers, and the fetch fix are all machinery for one job: making sure that when an agent stops, something says so.
 
 Part three is the other lane, where the same question is harder because the thing that stops is a session with a person attached to it.
 
