@@ -13,9 +13,9 @@ comments: false
 
 Part 3 of five on running an AI agent fleet. [Part 1](/2026/10/agent-fleet-two-lanes.html) covered the two lanes and the rulebook they share, and [part 2](/2026/10/github-issue-to-pr-headless.html) reviewed the headless lane in detail.
 
-This is the lane with sessions I talk to directly, through a central coordinator. With 21 of them open at once, I can't watch every window, so I need to know which ones need me. At any moment, a session is doing one of three things: working on a task, waiting for me to answer a question, or stuck on something it can't get past on its own.
+This is the lane with sessions I talk to directly, through a central coordinator. With 21 agents open at once, on several computers and across several products, I can't watch every window or check all the work myself. I need to know which sessions need me, and I need the agents to follow my rules and policies, with those rules actually enforced. At any moment, a session is doing one of four things: working on a task, sitting idle with nothing to do, waiting for me to answer a question, or stuck on something it can't get past on its own.
 
-From the outside, all three look the same: a terminal with text on the screen and nothing changing. This post explains how the lane is organized so that I only get pulled in when a session actually needs me: who does what, how work is handed out and tracked, and how the fleet tells those three states apart.
+From the outside, they are hard to tell apart: each one is just a terminal with text on the screen. Only two of them need me, waiting and stuck. The rest of this post explains how the lane is set up so that those two reach me, and every session works by the same rules.
 
 ## The roles
 
@@ -29,14 +29,14 @@ Questions go from a worker to the coordinator, and only reach me if the coordina
 
 ## How work is handed out
 
-Work goes to a machine because it can handle it, not because it is free. Each machine has a role:
+Work goes to a machine because it can handle it, not because it is free. Each machine has a role and a profile:
 
 - The coordinator runs on an old laptop with 4 GB of memory. It coordinates and nothing else: no test suites, no builds. At roughly 290 MB per session, it runs three, one per organization.
 - The MacBook Pro with 24 GB is for development and testing. It runs ten sessions, including one for each repository I work on most.
-- The Linux PC runs the headless lane from part two, plus eight interactive sessions for development and testing.
-- The 64 GB MacBook only serves local models and runs no sessions.
+- The Linux PC runs the headless lane from part two and a self-hosted GitHub Actions runner, so CI and other GitHub workflows run there too. It also runs eight interactive sessions for development and testing.
+- The 64 GB MacBook serves the fleet's local models through Ollama to every other machine, and takes work from the coordinator when it is needed.
 
-A launcher, the script from part one, starts each machine's sessions at boot inside tmux and restarts any that have exited. Every session has a Remote Control name, so I can open any of them from my phone.
+A launcher, the script described in part one, starts each machine's sessions at boot inside tmux and restarts any that have exited. Each one is a regular Claude Code session with Remote Control turned on, which connects it to my Claude account. That does two things. I can open any session from my phone or a browser and answer it there. And the sessions can message each other across machines through that same connection, which is how the coordinator hands out work and how workers report back.
 
 ## Rules and skills
 
