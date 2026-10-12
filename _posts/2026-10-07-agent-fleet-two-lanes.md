@@ -5,7 +5,7 @@ title:  "My AI Agent Fleet, Part 1: Two Lanes, One Rulebook"
 author: oscar
 categories: [ ai, agents, automation, engineering ]
 tags: [ai, agents, automation, tmux, ctrlrelay, devops, llm]
-image: images/posts/ai-practical-use.png
+image: images/posts/agent-fleet-part1.png
 description: "Part one of five on running Claude Code and Codex agents across several machines: the interactive lane, the headless lane, the rules repository they share, and the failure mode each one has."
 featured: false
 comments: false
