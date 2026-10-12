@@ -13,9 +13,19 @@ comments: false
 
 Part 2 of five on running an AI agent fleet. [Part 1](/2026/10/agent-fleet-two-lanes.html) covered the two lanes and why each one fails differently.
 
-This post is the lane where nobody watches a terminal. An issue gets assigned on GitHub, and some time later a pull request appears with tests and a description. Nobody watched a terminal for any of it. If a decision is needed, the agent escalates a question to me, the human in the loop, and once I answer, the work continues from that decision.
+This post is about the headless lane. An issue gets assigned on GitHub, and some time later a pull request appears with tests and a description. Nobody watched a terminal for any of it. If a decision is needed, the agent escalates a question to me, the human in the loop, and once I answer, the work continues from that decision.
 
-The daemon is [ctrlrelay](https://github.com/AInvirion/ctrlrelay), Apache 2.0, currently 0.12.2. It is mine, it is public, and most of what follows is in its changelog, which is where I keep the reasons rather than the features.
+The headless lane runs on [ctrlrelay](https://github.com/AInvirion/ctrlrelay), open source under the Apache 2.0 license. I'm the author, and it keeps changing: much of that happens automatically, based on what my team and I learn along the way. Most of the work it handles is DevOps in the broad sense: bug fixes, documentation and editorial changes, releases, CI and workflow improvements, Dependabot updates, security fixes, and version upgrades. The reasons behind each change go in its changelog, which is where most of what follows comes from.
+
+## How it is put together
+
+ctrlrelay is a few small parts running on one Linux machine, with no web server and no queue:
+
+- **The poller** is a background service. Every five minutes it asks GitHub for new issues across the repositories in its config, and it also runs scheduled jobs, like the daily security sweep.
+- **The pipelines** do the work. The dev pipeline turns an issue into a pull request. The secops pipeline handles Dependabot pull requests.
+- **The agent** is Claude Code running headless (`claude -p`), in its own git worktree, one per issue.
+- **The state database** is a single SQLite file. It holds the repository locks, the sessions, and the questions waiting for me.
+- **The bridge** is a separate service that carries those questions to me on Telegram or Mattermost and brings my answers back. It can restart without touching work in progress.
 
 ## What the agent is allowed to pick up
 
@@ -63,7 +73,7 @@ Do NOT merge the PR - wait for human review.
 
 Step 1 is there because an issue filed three weeks ago may already be fixed. Step 2 is there because an agent that guesses at an ambiguous ticket produces a pull request that looks finished. The capitalized "EXACTLY" in step 5 has a story behind it, below.
 
-Around that, the orchestrator takes a per-repository lock in SQLite, cuts a worktree from a bare clone, spawns the agent, and reads its checkpoint. Two issues in the same repository can be in flight at once, and both write to the same bare clone on disk, so the lock makes them take turns. It is a single row with a uniqueness constraint, so acquiring it is an `INSERT` that either succeeds or raises `IntegrityError`. The agent gives the lock back while it waits for CI, because waiting doesn't touch git, so one issue's ten-minute CI run doesn't hold up the other. Getting it back is the interesting part:
+Around that, the dev pipeline takes a per-repository lock in SQLite, cuts a worktree from a bare clone, spawns the agent, and reads its checkpoint. Two issues in the same repository can be in flight at once, and both write to the same bare clone on disk, so the lock makes them take turns. It is a single row with a uniqueness constraint, so acquiring it is an `INSERT` that either succeeds or raises `IntegrityError`. The agent gives the lock back while it waits for CI, because waiting doesn't touch git, so one issue's ten-minute CI run doesn't hold up the other. Getting it back is the interesting part:
 
 ```text
 # Reacquire policy for the repo lock after the unlocked verification phase.
@@ -81,7 +91,7 @@ Both failure directions are named in that comment, which is the only reason the 
 
 ## The checkpoint is a file, and it is written by rename
 
-The agent reports by writing a small JSON file with one of three statuses, `DONE`, `BLOCKED_NEEDS_INPUT`, or `FAILED`. It is written to a temporary path and renamed into place, so a reader either sees the previous complete state or the new complete state. The orchestrator has to survive its own restart and still know where every session got to, which rules out keeping that state in memory.
+The agent reports by writing a small JSON file with one of three statuses, `DONE`, `BLOCKED_NEEDS_INPUT`, or `FAILED`. It is written to a temporary path and renamed into place, so a reader either sees the previous complete state or the new complete state. ctrlrelay has to survive its own restart and still know where every session got to, which rules out keeping that state in memory.
 
 The protocol exists because its absence is invisible. An agent that finishes its work, exits 0, and writes nothing looks exactly like an agent that crashed. That is not hypothetical, and the source records the case:
 
