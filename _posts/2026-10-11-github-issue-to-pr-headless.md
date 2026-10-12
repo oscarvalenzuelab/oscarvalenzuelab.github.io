@@ -105,13 +105,11 @@ When the agent hits something it should not decide alone, it writes its question
 
 A question does not have to be answered right away. It is stored in the state database, so an answer that arrives hours later can still restart the work, for up to 48 hours by default. When the session ends, I get one last message: the pull request is ready, or it failed and why. Reviewing and merging the pull request is still my job.
 
-## My part
+## My part, governance and supervision
 
 My part comes down to three things. I decide what the agent may take: the label on an issue, and the policy for each repository. I answer its questions, because a question waiting on me is work that has stopped. And I review and merge what it produces. The agent writes the code; the merge is still mine.
 
-Everything in this post, the gates, the note, the three answers and the review, exists for one job: making sure that when an agent stops, I find out, and I know why.
-
-Part three is the other lane, where the same question is harder because the thing that stops is a session with a person attached to it.
+Part three of this series will describe more about the other lane: the sessions I work with directly, and how I tell an agent that is busy from one that is stuck.
 
 ---
 
