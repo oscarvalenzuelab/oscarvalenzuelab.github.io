@@ -6,7 +6,7 @@ author: oscar
 categories: [ ai, agents, automation, engineering ]
 tags: [ai, agents, automation, ctrlrelay, github, ci, devops]
 image: images/posts/agentic_sboms_datafeed.png
-description: "The headless half of an agent fleet: a poller, a worktree, a checkpoint file written by rename, and the two fetch bugs that sat on opposite sides of the same line of code."
+description: "The headless half of an agent fleet: what the agent may pick up, the rules it works under, the review loop, and how a question reaches me and comes back."
 featured: false
 comments: false
 ---
@@ -91,7 +91,7 @@ That is the general shape of a headless failure. A wrong answer I would catch. W
 
 The numbered workflow is only part of what the agent reads. ctrlrelay also syncs my shared rules and skills into `~/.claude/` from the same Git repository the interactive lane uses, so the headless agent starts with the same rules as the sessions I drive by hand. Part four covers how that rulebook is organized.
 
-The prompt adds a few rules of its own. If the issue's comments disagree with its body, the comments win, because nobody goes back and edits the body after changing their mind in the thread. If the two can't be reconciled, the agent asks instead of picking one. The security sweep may only look at pull requests opened by Dependabot or by me. A stranger's pull request is not its business, so it never goes looking for one.
+The prompt adds a few rules of its own. If the issue's comments disagree with its body, the comments win, because nobody goes back and edits the body after changing their mind in the thread. If the two can't be reconciled, the agent asks instead of picking one. The security sweep is fenced to the three things listed earlier: open Dependabot alerts, pull requests opened by Dependabot, and my own pull requests that turn Dependabot on. A stranger's pull request is not its business, so it never goes looking for one.
 
 ## The review loop
 
@@ -99,7 +99,7 @@ The agent waits for CI with one exact command, `ctrlrelay ci wait`, instead of w
 
 The agent saying `DONE` is not the end. ctrlrelay then checks the pull request itself: CI green, and no merge conflicts. If either check fails, it resumes the same agent session with what is wrong and checks again, up to three times.
 
-Once CI is green, Codex reviews the branch in a read-only sandbox and posts what it finds as a comment on the pull request. The comment is labeled as unverified opinion, on purpose. The agent being reviewed wrote every file the reviewer reads. I tried twice to mark a pull request as reviewed, and both times the agent's own files could fool the marker; the simplest was a committed file telling the reviewer to reply "No findings". So the findings get published, and nothing claims a review took place. Part five comes back to why a clean verdict is the cheapest thing a broken reviewer produces.
+Once CI is green, Codex is asked to review the branch in a read-only sandbox and posts what it finds as a comment on the pull request. The comment is labeled as unverified opinion, on purpose. The agent being reviewed wrote every file the reviewer reads. I tried twice to mark a pull request as reviewed, and both times the agent's own files fooled the marker; the simplest was a committed file telling the reviewer to reply "No findings". So the findings get published, and nothing claims a review took place. Part five comes back to why a clean verdict is the cheapest thing a broken reviewer produces.
 
 ## How I stay in the loop
 
@@ -119,7 +119,7 @@ The second was a pair of fetch bugs, two days apart. ctrlrelay's fetch refuses t
 
 Back to the number from part one. On one deployment, 46 questions were posted to the chat bridge, 4 were ever answered, and 16 were still sitting live. Every piece of machinery above is there so an agent can ask. None of it makes anyone read.
 
-Writing the code was never the part that needed engineering. The lock, the rename, the three exit codes, and the two refspecs are all machinery for one job: making sure that when an agent stops, something says so.
+Writing the code was never the part that needed engineering. The lock, the rename, the three exit codes, and the fetch fix are all machinery for one job: making sure that when an agent stops, something says so.
 
 Part three is the other lane, where the same question is harder because the thing that stops is a session with a person attached to it.
 
