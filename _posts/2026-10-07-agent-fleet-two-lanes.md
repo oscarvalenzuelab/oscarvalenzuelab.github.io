@@ -23,7 +23,7 @@ Each machine keeps its own keys, local clones, and agent sessions. There's no ce
 
 ## Why local sessions, and why Claude Code
 
-If I'm using Claude Code anyway, why not run everything in the web version? Because the work needs things a hosted session doesn't give me:
+If I'm using Claude Code anyway, why not run everything in Claude Code Web? Because the work needs things a hosted session doesn't give me:
 
 - My own rules and policies, enforced the same way on every machine.
 - Real hardware: heavy test suites, research, large files, local models, and a GPU.
@@ -32,7 +32,7 @@ If I'm using Claude Code anyway, why not run everything in the web version? Beca
 - Integrations with my own tools, like Mattermost.
 - A full Linux or macOS environment, configured the way I want.
 
-\* The web version adds its own attribution to every commit and pull request, and you can't disable it. In some cases it has also added headers claiming authorship of files I created from scratch. That muddies GitHub's record of who did the work, interferes with CLA bots that would otherwise approve my own pull requests automatically, and raises the question of who owns the code. It also makes every project easy to find by searching for the tool's name, as if someone wanted to flag projects and code for tracking.
+\* Claude Code Web adds its own attribution to every commit and pull request, and you can't disable it. That muddies GitHub's record of who did the work, and it stops my CLA bot from auto-approving my own pull requests.
 
 And why use Claude Code itself to coordinate the fleet, instead of building my own tool on the API?
 
