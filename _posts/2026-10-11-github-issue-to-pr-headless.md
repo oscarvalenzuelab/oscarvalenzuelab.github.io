@@ -5,7 +5,7 @@ title:  "My AI Agent Fleet, Part 2: From a GitHub Issue to a Pull Request Withou
 author: oscar
 categories: [ ai, agents, automation, engineering ]
 tags: [ai, agents, automation, ctrlrelay, github, ci, devops]
-image: images/posts/agentic_sboms_datafeed.png
+image: images/posts/agent-fleet-part2.png
 description: "The headless half of an agent fleet: what the agent may pick up, the rules it works under, the review loop, and how a question reaches me and comes back."
 featured: false
 comments: false
