@@ -79,13 +79,13 @@ Step 1 is there because an issue filed three weeks ago may already be fixed. Ste
 
 Two issues in the same repository can be worked at the same time, so the dev pipeline uses a lock to make them take turns whenever they touch git. While an agent waits for CI, it gives the lock back, so one issue's ten-minute CI run doesn't hold up the other. The only real decision was how long to wait to get the lock back. Too short, and a healthy session working on another issue makes this one fail. No limit, and a session that crashed while holding the lock blocks the repository forever. I settled on about an hour.
 
-## The checkpoint is a file, and it is written by rename
+## How the agent reports back
 
-The agent reports by writing a small JSON file with one of three statuses, `DONE`, `BLOCKED_NEEDS_INPUT`, or `FAILED`. It is written to a temporary path and renamed into place, so a reader either sees the previous complete state or the new complete state. ctrlrelay has to survive its own restart and still know where every session got to, which rules out keeping that state in memory.
+When the agent stops, it leaves a short note in a file: done, stuck with a question, or failed. ctrlrelay reads that note to decide what happens next. It is a file rather than something kept in memory, so ctrlrelay can restart and still know where every session got to.
 
-The protocol exists because its absence is invisible. An agent that finishes its work, exits 0, and writes nothing looks exactly like an agent that crashed. On 16 September 2026 that is what happened: a resumed session merged three of four pull requests, wrote no checkpoint, and I was told the resume had failed. The first prompt spent about thirty lines on the checkpoint rules; the resume prompt was 58 characters and said only "continue". The resume prompt now carries the same rules.
+Without that note, a finished agent and a crashed agent look exactly the same. For example, say I approve some work and the agent picks it back up. It merges three of four pull requests, then exits without leaving a note. From the outside, that looks like a failure, even though most of the work landed. That is why every set of instructions the agent gets, including the short one for picking work back up, carries the same rule about the note.
 
-That is the general shape of a headless failure. A wrong answer I would catch. What I get instead is a report in the correct format, delivered on time, about something other than what happened.
+That is what headless failures usually look like. Not a wrong answer, which I would catch, but a tidy report, delivered on time, about something other than what happened.
 
 ## The rules the agent works under
 
@@ -103,7 +103,7 @@ Once CI is green, Codex is asked to review the branch in a read-only sandbox and
 
 ## How I stay in the loop
 
-When the agent hits something it should not decide alone, it writes `BLOCKED_NEEDS_INPUT` with a question into its checkpoint and exits. The bridge posts the question to Telegram or Mattermost, and I get a notification on my phone. I answer, and using the app's reply feature ties my answer to the right question when several are open. ctrlrelay then resumes the same agent session with my answer, so it picks up with everything it already knew. A session can go around that loop five times before ctrlrelay gives up on it.
+When the agent hits something it should not decide alone, it writes its question into that note and exits. The bridge posts the question to Telegram or Mattermost, and I get a notification on my phone. I answer, and using the app's reply feature ties my answer to the right question when several are open. ctrlrelay then resumes the same agent session with my answer, so it picks up with everything it already knew. A session can go around that loop five times before ctrlrelay gives up on it.
 
 A question does not have to be answered right away. It is stored in the state database, so an answer that arrives hours later can still restart the work, for up to 48 hours by default. When the session ends, I get one last message: the pull request is ready, or it failed and why. Reviewing and merging the pull request is still my job.
 
@@ -119,7 +119,7 @@ The second was a pair of fetch bugs, two days apart. ctrlrelay's fetch refuses t
 
 Back to the number from part one. On one deployment, 46 questions were posted to the chat bridge, 4 were ever answered, and 16 were still sitting live. Every piece of machinery above is there so an agent can ask. None of it makes anyone read.
 
-Writing the code was never the part that needed engineering. The lock, the rename, the three exit codes, and the fetch fix are all machinery for one job: making sure that when an agent stops, something says so.
+Writing the code was never the part that needed engineering. The lock, the note, the three exit codes, and the fetch fix are all machinery for one job: making sure that when an agent stops, something says so.
 
 Part three is the other lane, where the same question is harder because the thing that stops is a session with a person attached to it.
 
