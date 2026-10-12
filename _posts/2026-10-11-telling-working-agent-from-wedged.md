@@ -11,9 +11,9 @@ featured: false
 comments: false
 ---
 
-Part 3 of five on running an AI agent fleet. [Part 1](/2026/10/agent-fleet-two-lanes.html) covered the two lanes and the rulebook they share, and [part 2](/2026/10/github-issue-to-pr-headless.html) the headless lane.
+Part 3 of five on running an AI agent fleet. [Part 1](/2026/10/agent-fleet-two-lanes.html) covered the two lanes and the rulebook they share, and [part 2](/2026/10/github-issue-to-pr-headless.html) reviewed in details the headless lane.
 
-This is the lane with sessions I talk to directly. A session thinking for ninety seconds, a session that asked me something an hour ago, and a session stuck on a dialog it cannot dismiss all look the same on screen: a window with text in it and nothing moving.
+This is the lane with sessions I talk to directly (thorught a central coordinator). A session thinking for ninety seconds, a session that asked me something an hour ago, and a session stuck on a dialog it cannot dismiss all look the same on screen: a window with text in it and nothing moving.
 
 This post is about how I tell them apart.
 
