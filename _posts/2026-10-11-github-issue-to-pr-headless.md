@@ -109,7 +109,7 @@ A question does not have to be answered right away. It is stored in the state da
 
 My part comes down to three things. I decide what the agent may take: the label on an issue, and the policy for each repository. I answer its questions, because a question waiting on me is work that has stopped. And I review and merge what it produces. The agent writes the code; the merge is still mine.
 
-Part three of this series will describe more about the other lane: the sessions I work with directly, and how I tell an agent that is busy from one that is stuck.
+[Part three](/2026/10/telling-working-agent-from-wedged.html) of this series will describe more about the other lane: the sessions I work with directly, and how I tell whether each one is working, waiting on me, or stuck.
 
 ---
 
