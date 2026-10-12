@@ -93,13 +93,11 @@ The prompt also sets a few rules of its own. If the comments on an issue say som
 
 ## The review loop
 
-After the agent opens a pull request, GitHub runs the repository's automated checks (CI): the tests, the build, the linters. The agent can't call the work done until those pass, because a pull request that fails its own checks only looks finished.
-
-It waits using one fixed command, `ctrlrelay ci wait`, so it never writes its own waiting loop. Its homemade loops used to get this wrong and sit there until they timed out, even on pull requests that had already passed. The command gives one of three answers: everything passed, something failed and needs fixing, or CI was still running when time ran out. That last one is not a failure, only unfinished, so ctrlrelay checks again later instead of having the agent "fix" something that isn't broken.
+After the agent opens a pull request, GitHub runs the repository's automated checks (CI): the tests, the build, the linters. The agent can't call the work done until those pass, because a pull request that fails its own checks only looks finished. The agent then waits using `ctrlrelay ci wait`, so it never writes its own waiting loop. In many cases the wait loops written by the coding agent caused problems and sat there until they timed out, even on pull requests that had already passed. The wait command gives one of three answers: everything passed, something failed and needs fixing, or CI was still running when time ran out. That last one is not a failure, only unfinished, so ctrlrelay checks again later instead of having the agent "fix" something that isn't broken, which would waste tokens.
 
 When the agent says it's done, ctrlrelay checks for itself: are the checks green, and can the pull request merge cleanly? If not, it sends the agent back with what's wrong, up to three times.
 
-Then Codex is asked to review the branch, without being able to change anything, and leaves its findings as a comment on the pull request. I treat that comment as a second opinion, not a stamp of approval. The agent wrote every file the reviewer reads, so it can steer the review. Once, a file in the branch simply told the reviewer to answer "No findings", and it did. Part five comes back to this.
+Then Codex is asked to review the branch, without being able to change anything, and leaves its findings as a comment on the pull request. I treat that comment as a second opinion, not a stamp of approval. The agent wrote every file the reviewer reads, so it can steer the review. Once, a file in the branch simply told the reviewer to answer "No findings", and it did. Part five comes back to this kind of issue, and how to avoid accidental prompt injection.
 
 ## How I stay in the loop
 
