@@ -93,11 +93,13 @@ The prompt also sets a few rules of its own. If the comments on an issue say som
 
 ## The review loop
 
-The agent waits for CI with one exact command, `ctrlrelay ci wait`, instead of writing its own loop. Its own loops had gone wrong before, with inverted conditions and pipes that swallowed exit codes, and burned the whole session timeout on pull requests that were already green. The command has three exit codes: 0 means every check passed, 1 means one failed and the agent should fix it and wait again, and 2 means the timeout hit while checks were still running. That third one is not a failure. It is an unfinished question, and treating it as a failure would have agents "fixing" green pull requests.
+After the agent opens a pull request, GitHub runs the repository's automated checks (CI): the tests, the build, the linters. The agent can't call the work done until those pass, because a pull request that fails its own checks only looks finished.
 
-The agent saying `DONE` is not the end. ctrlrelay then checks the pull request itself: CI green, and no merge conflicts. If either check fails, it resumes the same agent session with what is wrong and checks again, up to three times.
+It waits using one fixed command, `ctrlrelay ci wait`, so it never writes its own waiting loop. Its homemade loops used to get this wrong and sit there until they timed out, even on pull requests that had already passed. The command gives one of three answers: everything passed, something failed and needs fixing, or CI was still running when time ran out. That last one is not a failure, only unfinished, so ctrlrelay checks again later instead of having the agent "fix" something that isn't broken.
 
-Once CI is green, Codex is asked to review the branch in a read-only sandbox and posts what it finds as a comment on the pull request. The comment is labeled as unverified opinion, on purpose. The agent being reviewed wrote every file the reviewer reads. I tried twice to mark a pull request as reviewed, and both times the agent's own files fooled the marker; the simplest was a committed file telling the reviewer to reply "No findings". So the findings get published, and nothing claims a review took place. Part five comes back to why a clean verdict is the cheapest thing a broken reviewer produces.
+When the agent says it's done, ctrlrelay checks for itself: are the checks green, and can the pull request merge cleanly? If not, it sends the agent back with what's wrong, up to three times.
+
+Then Codex is asked to review the branch, without being able to change anything, and leaves its findings as a comment on the pull request. I treat that comment as a second opinion, not a stamp of approval. The agent wrote every file the reviewer reads, so it can steer the review. Once, a file in the branch simply told the reviewer to answer "No findings", and it did. Part five comes back to this.
 
 ## How I stay in the loop
 
