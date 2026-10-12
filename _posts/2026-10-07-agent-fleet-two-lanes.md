@@ -21,6 +21,23 @@ I don't run Hermes, Grok bot, or heavy multi-agent frameworks. Working in securi
 
 Each machine keeps its own keys, local clones, and agent sessions. There's no central vault holding everything. The coordinator is trusted, though: it can SSH into the other machines and has its own GitHub login. The machine I actually worry about is the one running the headless lane. It reads issue text from dozens of repositories, and anyone can write an issue. So that machine can't SSH into my laptops, and an agent tricked by a bad issue can't use it to reach my personal data. If the coordinator goes down, the interactive lane stops getting new work. Sessions already on a task keep going, and the headless lane doesn't notice.
 
+## Why local sessions, and why Claude Code
+
+If I'm using Claude Code anyway, why not run everything in the web version? Because the work needs things a hosted session doesn't give me:
+
+- My own rules and policies, enforced the same way on every machine.
+- Real hardware: heavy test suites, research, large files, local models, and a GPU.
+- Full control over Git: how branches, pull requests, and commit messages look, with no attribution added that I didn't choose.
+- My own credentials and permissions, and my own way of operating.
+- Integrations with my own tools, like Mattermost.
+- A full Linux or macOS environment, configured the way I want.
+
+And why use Claude Code itself to coordinate the fleet, instead of building my own tool on the API?
+
+- **Cost:** a subscription is a predictable monthly price, while the API charges for every token, and a fleet this size uses a lot of them.
+- **Tracking:** I can see what each session uses, which is how I found the sessions carrying too much context.
+- **Terms:** using my subscription through Anthropic's own tool keeps me clearly within its terms. Plugging the same subscription into a third-party tool would not.
+
 ## The machines
 
 Here’s my hardware setup right now, four machines:
