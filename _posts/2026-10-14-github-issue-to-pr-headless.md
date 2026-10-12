@@ -83,57 +83,37 @@ Two issues in the same repository can be worked at the same time, so the dev pip
 
 The agent reports by writing a small JSON file with one of three statuses, `DONE`, `BLOCKED_NEEDS_INPUT`, or `FAILED`. It is written to a temporary path and renamed into place, so a reader either sees the previous complete state or the new complete state. ctrlrelay has to survive its own restart and still know where every session got to, which rules out keeping that state in memory.
 
-The protocol exists because its absence is invisible. An agent that finishes its work, exits 0, and writes nothing looks exactly like an agent that crashed. That is not hypothetical, and the source records the case:
-
-```text
-Measured case, 2026-09-16:
-resumed after an "Approved", ran 27.4s, exited 0 and wrote no checkpoint
-- having in fact merged three of four pull requests. The operator was
-told the resume failed, which was wrong in both directions: most of
-the work had landed, and the one thing outstanding was never named.
-```
-
-The cause was length. The initial prompt spent about thirty lines establishing the checkpoint contract. The resume prompt was 58 characters and said only "continue". So a resumed agent had never been told the one thing it had to do before exiting, and the report I got was wrong in both directions at once: it said nothing had landed when three merges had, and it did not name the fourth.
+The protocol exists because its absence is invisible. An agent that finishes its work, exits 0, and writes nothing looks exactly like an agent that crashed. On 16 September 2026 that is what happened: a resumed session merged three of four pull requests, wrote no checkpoint, and I was told the resume had failed. The first prompt spent about thirty lines on the checkpoint rules; the resume prompt was 58 characters and said only "continue". The resume prompt now carries the same rules.
 
 That is the general shape of a headless failure. A wrong answer I would catch. What I get instead is a report in the correct format, delivered on time, about something other than what happened.
 
-## Why waiting for CI became its own command
+## The rules the agent works under
 
-Step 5 says "do NOT improvise bash" in capitals because improvised bash is how agents lie about CI. The prompt spells out the reason:
+The numbered workflow is only part of what the agent reads. ctrlrelay also syncs my shared rules and skills into `~/.claude/` from the same Git repository the interactive lane uses, so the headless agent starts with the same rules as the sessions I drive by hand. Part four covers how that rulebook is organized.
 
-```text
-Exit codes: 0 = all checks passed, 1 = a check failed (investigate,
-fix, push, then re-run the wait), 2 = hard timeout while CI is still
-pending (treat as acceptable, hand off and let the orchestrator
-re-verify). Do NOT write your own `until` / `while` loops around
-`gh pr checks`; those have been miswritten in the past (inverted
-semantics, pipes swallowing exit codes) and burned the whole session
-timeout on PRs that were already green.
-```
+The prompt adds a few rules of its own. If the issue's comments disagree with its body, the comments win, because nobody goes back and edits the body after changing their mind in the thread. If the two can't be reconciled, the agent asks instead of picking one. The security sweep may only look at pull requests opened by Dependabot or by me. A stranger's pull request is not its business, so it never goes looking for one.
 
-Three exit codes, and the third one is the design decision. A timeout while checks are still pending is not a failure, it is an unfinished question, and collapsing it into exit 1 would have agents "fixing" green pull requests.
+## The review loop
 
-Then the command itself turned out to have the same class of bug it was built to prevent. From the 0.8.1 changelog, dated 4 September 2026: the implementation shelled out to `gh pr checks --json ...`, and `gh` 2.45.0, the current Ubuntu 24.04 package, does not support `--json` on that subcommand. Every poll failed with `unknown flag: --json`. The polling layer treats a failed poll as transient and retries. So on that platform every `ci wait` call was guaranteed to consume its entire timeout and then report failure, with no relationship to the state of the pull request.
+The agent waits for CI with one exact command, `ctrlrelay ci wait`, instead of writing its own loop. Its own loops had gone wrong before, with inverted conditions and pipes that swallowed exit codes, and burned the whole session timeout on pull requests that were already green. The command has three exit codes: 0 means every check passed, 1 means one failed and the agent should fix it and wait again, and 2 means the timeout hit while checks were still running. That third one is not a failure. It is an unfinished question, and treating it as a failure would have agents "fixing" green pull requests.
 
-The retry logic was correct. The thing it was retrying could never succeed. I will come back to that pattern in part five, because it is the single most expensive category of bug in this whole system.
+The agent saying `DONE` is not the end. ctrlrelay then checks the pull request itself: CI green, and no merge conflicts. If either check fails, it resumes the same agent session with what is wrong and checks again, up to three times.
 
-One measurement on cost, from 0.8.0. Two `ci wait` calls accounted for 12 minutes of a 26-minute run, while the whole session generated under 35,000 output tokens. The wall clock is CI runtime, not model work, which is worth knowing before anyone optimizes the wrong half.
+Once CI is green, Codex reviews the branch in a read-only sandbox and posts what it finds as a comment on the pull request. The comment is labeled as unverified opinion, on purpose. The agent being reviewed wrote every file the reviewer reads. I tried twice to mark a pull request as reviewed, and both times the agent's own files could fool the marker; the simplest was a committed file telling the reviewer to reply "No findings". So the findings get published, and nothing claims a review took place. Part five comes back to why a clean verdict is the cheapest thing a broken reviewer produces.
 
-## Two fetch bugs on opposite sides of one line
+## How I stay in the loop
 
-This is my favorite pair in the codebase, because the second one is the correction to the first and they are both right.
+When the agent hits something it should not decide alone, it writes `BLOCKED_NEEDS_INPUT` with a question into its checkpoint and exits. The bridge posts the question to Telegram or Mattermost, and I get a notification on my phone. I answer, and using the app's reply feature ties my answer to the right question when several are open. ctrlrelay then resumes the same agent session with my answer, so it picks up with everything it already knew. A session can go around that loop five times before ctrlrelay gives up on it.
 
-The bare-repo fetch deliberately uses a non-force refspec, so it can never discard a previous session's unpushed commits. Dependabot rebases its branches onto a moved base, which rewrites their tips, so every rebase became a `non-fast-forward` rejection. The detail that turns that into an outage is this: `git fetch` exits 1 on a declined rewind even when every other ref applied cleanly. The setup code read the exit code as failure and aborted the session.
+A question does not have to be answered right away. It is stored in the state database, so an answer that arrives hours later can still restart the work, for up to 48 hours by default. When the session ends, I get one last message: the pull request is ready, or it failed and why. Reviewing and merging the pull request is still my job.
 
-The 0.11.2 changelog, dated 10 September 2026, records a site-builder app whose sweep died reporting a rejection in the same fetch that had just successfully advanced `main`. Twelve bare repositories were holding a `dependabot/*` ref at that moment, each one primed to fail as soon as Dependabot rebased it.
+## What failed quietly
 
-The fix fetches `dependabot/*` with a force refspec first, because those branches are bot-authored and never carry local work, so rewinding one destroys nothing. Surviving rejections are logged and tolerated rather than raised. Real failures still raise, and the changelog is specific about why:
+Two bugs from the changelog show how this kind of system breaks.
 
-> Failing open there would turn an unreachable remote into a silent no-op and run pipelines against a stale tree.
+The first was in `ci wait` itself, the command built to stop agents misreading CI. In 0.8.1, dated 4 September 2026, it called `gh pr checks --json`, and the `gh` package on Ubuntu 24.04 does not support `--json` on that subcommand. Every poll failed, the polling layer treated each failure as temporary and retried, and every call used its whole timeout and then reported failure, whatever the state of the pull request. The retry logic was correct. The thing it was retrying could never succeed. Part five comes back to that pattern, because it is the most expensive kind of bug in this whole system.
 
-Two days later, in 0.11.3 dated 12 September 2026, that fix got narrowed. Tolerating every non-fast-forward rejection also covered the default branch, which is the branch sessions are cut from. After a force-push to `main` on GitHub, the bare repo would keep its old `main`, and every session would run against a tree the remote no longer had, with a single log line to show for it. A rejection of the default branch now raises `default branch diverged from origin`.
-
-Put those side by side. The first bug was loud: a sweep aborted and told me so. The second would have been silent, and it was the dangerous one. I caught it two days later, and only because I went looking.
+The second was a pair of fetch bugs, two days apart. ctrlrelay's fetch refuses to rewrite a branch, so it can never throw away unpushed work. Dependabot rewrites its branches every time it rebases them, and `git fetch` reports the refusal as a failure even when everything else was fetched, so every rebase killed the sweep. The fix in 0.11.2 tolerated those refusals. Two days later, 0.11.3 narrowed it: tolerating every refusal also covered `main`, so after a force-push to `main` every session would have run on a tree GitHub no longer had, with one log line to show for it. Now a refusal on the default branch stops the run. The first bug was loud: a sweep aborted and told me so. The second would have been silent, and I caught it only because I went looking.
 
 ## What the operator has to do
 
