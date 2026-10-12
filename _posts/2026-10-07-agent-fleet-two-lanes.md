@@ -104,7 +104,7 @@ In both lanes, an agent can stop working while everything around it still looks 
 
 [Part two](/2026/10/github-issue-to-pr-headless.html) follows the headless pipeline from an incoming task to a pull request. It covers what the agent may pick up, the rules it works under, the review loop, and how its questions reach me.
 
-Part three covers how I spot stuck terminal sessions, assign work based on what each machine can handle, and keep the agents' context windows from growing too large.
+[Part three](/2026/10/telling-working-agent-from-wedged.html) covers how I tell whether a session is working, waiting on me, or stuck, how work goes to the machine that can handle it, and how I keep each session's context from growing too large.
 
 Part four covers the policy repo: the skill trigger table, when agents ask for help, the format they use to report their work, why a running session keeps the rules it read at startup, and what happened when the number of assigned issues suddenly grew.
 
