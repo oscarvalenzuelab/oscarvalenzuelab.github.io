@@ -27,7 +27,7 @@ If I'm using Claude Code anyway, why not run everything in the web version? Beca
 
 - My own rules and policies, enforced the same way on every machine.
 - Real hardware: heavy test suites, research, large files, local models, and a GPU.
-- Full control over Git: how branches, pull requests, and commit messages look, with no attribution added that I didn't choose.
+- Full control over Git. The web version adds its own attribution to every commit and pull request, and sometimes adds headers to files that claim authorship of them, and there is no way to turn it off. That muddies GitHub's record of who did the work and the question of who owns the code, and it makes every project easy to find by searching for the tool's name. Locally, attribution is a setting, and mine is off.
 - My own credentials and permissions, and my own way of operating.
 - Integrations with my own tools, like Mattermost.
 - A full Linux or macOS environment, configured the way I want.
