@@ -110,4 +110,6 @@ Part four covers the policy repo: the skill trigger table, when agents ask for h
 
 Part five is about checking the numbers I get from the fleet. It covers misleading measurements, test suites running against the wrong source tree, a review that came back clean without reviewing anything, and why Git alone can't tell me whether a pull request was merged.
 
-The views expressed in this document are solely my own and do not represent those of my current or past employers. If you identify an error, please contact me, and I will make the necessary updates.
+---
+
+*The views expressed in this document are solely my own and do not represent those of my current or past employers. If you identify an error, please contact me, and I will make the necessary updates.*
