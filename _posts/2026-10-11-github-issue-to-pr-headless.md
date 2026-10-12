@@ -105,19 +105,11 @@ When the agent hits something it should not decide alone, it writes its question
 
 A question does not have to be answered right away. It is stored in the state database, so an answer that arrives hours later can still restart the work, for up to 48 hours by default. When the session ends, I get one last message: the pull request is ready, or it failed and why. Reviewing and merging the pull request is still my job.
 
-## What failed quietly
-
-Two bugs from the changelog show how this kind of system breaks.
-
-The first was in `ci wait` itself, the command built to stop agents misreading CI. In 0.8.1, dated 4 September 2026, it called `gh pr checks --json`, and the `gh` package on Ubuntu 24.04 does not support `--json` on that subcommand. Every poll failed, the polling layer treated each failure as temporary and retried, and every call used its whole timeout and then reported failure, whatever the state of the pull request. The retry logic was correct. The thing it was retrying could never succeed. Part five comes back to that pattern, because it is the most expensive kind of bug in this whole system.
-
-The second was a pair of fetch bugs, two days apart. ctrlrelay's fetch refuses to rewrite a branch, so it can never throw away unpushed work. Dependabot rewrites its branches every time it rebases them, and `git fetch` reports the refusal as a failure even when everything else was fetched, so every rebase killed the sweep. The fix in 0.11.2 tolerated those refusals. Two days later, 0.11.3 narrowed it: tolerating every refusal also covered `main`, so after a force-push to `main` every session would have run on a tree GitHub no longer had, with one log line to show for it. Now a refusal on the default branch stops the run. The first bug was loud: a sweep aborted and told me so. The second would have been silent, and I caught it only because I went looking.
-
 ## What the operator has to do
 
 Back to the number from part one. On one deployment, 46 questions were posted to the chat bridge, 4 were ever answered, and 16 were still sitting live. Every piece of machinery above is there so an agent can ask. None of it makes anyone read.
 
-Writing the code was never the part that needed engineering. The lock, the note, the three answers, and the fetch fix are all machinery for one job: making sure that when an agent stops, something says so.
+Writing the code was never the part that needed engineering. The lock, the note, and the three answers are all machinery for one job: making sure that when an agent stops, something says so.
 
 Part three is the other lane, where the same question is harder because the thing that stops is a session with a person attached to it.
 
