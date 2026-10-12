@@ -7,7 +7,7 @@ categories: [ oss, security, compliance, supplychain, ai, sbom ]
 tags: [sca, compliance, oss, supplychain, ai, sbom, semclone, opensource]
 image: images/posts/semclone-launch.jpg
 description: "Introducing SEMCL.ONE, a community-driven SCA platform that automates open source compliance using AI and shared infrastructure."
-featured: true
+featured: false
 comments: false
 ---
 

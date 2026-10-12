@@ -7,7 +7,7 @@ categories: [ ai, agents, automation, engineering ]
 tags: [ai, agents, automation, tmux, ctrlrelay, devops, llm]
 image: images/posts/agent-fleet-part1.png
 description: "Part one of five on running Claude Code and Codex agents across several machines: the interactive lane, the headless lane, the rules repository they share, and the failure mode each one has."
-featured: false
+featured: true
 comments: false
 ---
 
