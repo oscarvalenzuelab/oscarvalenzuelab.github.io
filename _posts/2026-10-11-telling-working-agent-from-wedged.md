@@ -21,7 +21,7 @@ From the outside, they are hard to tell apart: each one is just a terminal with 
 
 There are three roles, and every session runs the same model. What separates them is what each one is allowed to decide.
 
-- **The coordinator** is a session called TPM, short for technical program manager. It hands out work, answers the workers' questions, and makes the everyday decisions: design choices inside a ticket, the order things merge in, priority, and scope.
+- **The coordinator** is a session called TPM, short for technical program manager. It hands out work, answers the workers' questions, and makes the everyday decisions: design choices inside a ticket, the order things merge in, and priority and scope within the direction I give it.
 - **The workers** are the other sessions, one per repository folder. A worker takes one ticket at a time, in its own git worktree and branch, and cleans both up when the ticket lands.
 - **I** decide a short, closed list of things: money, a customer-visible risk, anything irreversible or public, licensing, and work outside the current milestone.
 
@@ -56,17 +56,17 @@ First, it never trusts the window. When an agent exits, tmux keeps its window op
 
 Second, it reads how the screen is built, not what it says. Real dialogs always end with the same fixed line at the bottom, like "Enter to confirm · Esc to cancel", so the check looks for those exact lines in the last few lines of the screen. Looking for words like "do you want to" does not work, because an agent can use those words in a normal reply.
 
-When the check finds a session stuck on a dialog, for example one that finished its work but is waiting for a keypress before it can exit, it tells the coordinator. It does not press the key itself, because the session might be waiting on a real question. The coordinator then tells me, and I answer from my phone.
+When the check finds a session stuck on a dialog, for example one that finished its work but is waiting for a keypress before it can exit, it tells the coordinator. It does not press the key itself, because the session might be waiting on a real question. The coordinator then tells me, and I answer from the Claude app on my phone, or through Telegram or Mattermost.
 
 ## Keeping sessions healthy
 
 Everything a session has said and read stays in its context, and all of it is read again on every call. A session that finishes one task and moves on to the next carries the whole first task along, and across 21 sessions that adds up fast. When I measured, trimming the busiest sessions would have cut about a quarter of the fleet's usage.
 
-So sessions clear their context between unrelated tasks, and compact it when the thread still matters, but never in the middle of a task. Anything that exists only in the conversation, like a decision or a measurement, gets written to a file first. A context tool does this from outside, and it refuses to clear a session that is mid-task, holding a dialog, has text typed in, or has an open pull request. A session that is waiting on me says so in its last line, because otherwise it looks just like one that has finished.
+So sessions clear their context between unrelated tasks, and compact it when the thread still matters, but never in the middle of a task. Anything that exists only in the conversation, like a decision or a measurement, gets written to a memory file first. A context tool, one of the coordinator's tools, does this from outside, and it refuses to clear a session that is mid-task, holding a dialog, has text typed in, or has an open pull request. A session that is waiting on me says so in its last line, because otherwise it looks just like one that has finished.
 
 ## My part
 
-With all of this in place, my part is small. I set the rules, answer what the coordinator brings me, usually from my phone, and decide the few things that are mine to decide. Everything above exists so that I only get pulled in when a person is actually needed.
+With all of this in place, my part is small. I set the rules and the direction: what matters most, and how the products should be built. I answer what the coordinator brings me, usually from my phone, and decide the few things that are mine to decide. Everything above exists so that I only get pulled in when a person is actually needed. In practice, I'm the CTO of a small organization that works around the clock.
 
 Part four of this series covers the rulebook all these sessions read, and how it is organized.
 
