@@ -19,17 +19,21 @@ The headless lane runs on [ctrlrelay](https://github.com/AInvirion/ctrlrelay), o
 
 ## How it is put together
 
-ctrlrelay is a few small parts running on one Linux machine, with no web server and no queue:
+CTRLRelay (Control Relay) is a few small parts running on one Linux/MacOS machine, with no web server and no queue:
 
 - **The poller** is a background service. Every five minutes it asks GitHub for new issues across the repositories in its config, and it also runs scheduled jobs, like the daily security sweep.
-- **The pipelines** do the work. The dev pipeline turns an issue into a pull request. The secops pipeline handles Dependabot pull requests.
+- **The pipelines** do the work. The dev pipeline turns an issue into a pull request. The secops pipeline runs on a schedule and handles Dependabot alerts and pull requests.
 - **The agent** is Claude Code running headless (`claude -p`), in its own git worktree, one per issue.
 - **The state database** is a single SQLite file. It holds the repository locks, the sessions, and the questions waiting for me.
 - **The bridge** is a separate service that carries those questions to me on Telegram or Mattermost and brings my answers back. It can restart without touching work in progress.
 
 ## What the agent is allowed to pick up
 
-Before any agent runs, the poller decides what it may take. That check is code, not prompt, so nothing written in an issue can talk its way past it. On every repository, an issue needs two things: it is assigned to me, and it carries the `ctrlrelay:auto` label. Assignment alone was too loose: old self-assigned reminders, like "look into pricing", would go into the pipeline the first time the poller saw a repository. A `manual`, `operator`, or `instruction` label always wins and keeps the agent off the issue.
+Work comes in through two doors, and each one has its own rules.
+
+The first is issues. Before any agent runs, the poller decides which issues it may take. That check is code, not prompt, so nothing written in an issue can talk its way past it. On every repository, an issue needs two things: it is assigned to me, and it carries the `ctrlrelay:auto` label. Assignment alone was too loose: old self-assigned reminders, like "look into pricing", would go into the pipeline the first time the poller saw a repository. A `manual`, `operator`, or `instruction` label always wins and keeps the agent off the issue.
+
+The second is the security sweep, which runs every morning at six on every repository, with no assignment and no label. It looks only at open Dependabot alerts, pull requests opened by Dependabot, and my own pull requests that turn Dependabot on. That is the work the Dependabot keys below are for.
 
 Per-repository policy is a short config block:
 
@@ -47,7 +51,7 @@ repos:
       ci_wait_timeout_seconds: 600
 ```
 
-The Dependabot keys work differently. They are not checked in code; they become instructions in the agent's prompt. `auto` tells it to merge a patch bump once CI passes, `ask` sends me the question, and `never` leaves the pull request alone. That is an instruction, not a lock, which is why the decision about what enters the pipeline at all lives in code.
+The Dependabot keys work differently from the labels. They are not checked in code; they become instructions in the sweep's prompt. `auto` tells it to merge a patch bump once CI passes, `ask` sends me the question, and `never` leaves the pull request alone. That is an instruction, not a lock, which is why the decision about which issues enter the pipeline at all lives in code.
 
 Credentials are referenced by environment variable name, never by value. The config holds `bot_token_env: "CTRLRELAY_TELEGRAM_TOKEN"` and the process reads the name. That is a small thing that makes the config file committable, which is what makes a new machine a ten-minute job.
 
