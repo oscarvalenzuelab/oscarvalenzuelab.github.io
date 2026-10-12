@@ -29,7 +29,7 @@ CTRLRelay (Control Relay) is a few small parts running on one Linux/MacOS machin
 
 ## What the agent is allowed to pick up
 
-Work comes in through two doors, and each one has its own rules.
+Work comes in through two gates, and each one has its own rules.
 
 The first is issues. Before any agent runs, the poller decides which issues it may take. That check is code, not prompt, so nothing written in an issue can talk its way past it. On every repository, an issue needs two things: it is assigned to me, and it carries the `ctrlrelay:auto` label. Assignment alone was too loose: old self-assigned reminders, like "look into pricing", would go into the pipeline the first time the poller saw a repository. A `manual`, `operator`, or `instruction` label always wins and keeps the agent off the issue.
 
