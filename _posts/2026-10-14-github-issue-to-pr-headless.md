@@ -59,7 +59,7 @@ Credentials are referenced by environment variable name, never by value. The con
 
 From my side it looks like this. I assign an issue to myself on GitHub and add the `ctrlrelay:auto` label. ctrlrelay comments on the issue to say it took it, so anyone else looking knows. If the issue is unclear, I get a question on Telegram or Mattermost, and the work waits for my answer. Otherwise, some time later a pull request shows up with tests and green CI. The agent doesn't merge it. That part stays with me.
 
-Under that, the agent is given a numbered workflow, and the wording matters more than it looks:
+Under the hood, the agent is given a numbered workflow, and the wording matters more than it looks:
 
 ```text
 1. Validate the issue still applies to the current codebase
@@ -77,21 +77,7 @@ Do NOT merge the PR - wait for human review.
 
 Step 1 is there because an issue filed three weeks ago may already be fixed. Step 2 is there because an agent that guesses at an ambiguous ticket produces a pull request that looks finished. The capitalized "EXACTLY" in step 5 has a story behind it, below.
 
-Around that, the dev pipeline takes a per-repository lock in SQLite, cuts a worktree from a bare clone, spawns the agent, and reads its checkpoint. Two issues in the same repository can be in flight at once, and both write to the same bare clone on disk, so the lock makes them take turns. It is a single row with a uniqueness constraint, so acquiring it is an `INSERT` that either succeeds or raises `IntegrityError`. The agent gives the lock back while it waits for CI, because waiting doesn't touch git, so one issue's ten-minute CI run doesn't hold up the other. Getting it back is the interesting part:
-
-```text
-# Reacquire policy for the repo lock after the unlocked verification phase.
-# Verification releases the lock because CI polling doesn't touch git; when
-# we need to run `request_fix` (which spawns claude + writes worktree) we
-# must get it back. Contention here is NOT necessarily brief - a peer
-# session may be running its own full claude pass on another issue in the
-# same repo, which can take tens of minutes. A short retry budget would
-# spuriously fail healthy same-repo parallelism; bound the wait at roughly
-# one hour, long enough to outlast a normal peer run and short enough to
-# escape a stuck/SIGKILL'd peer whose lock row is lingering.
-```
-
-Both failure directions are named in that comment, which is the only reason the number is defensible. A short budget breaks working parallelism. No budget inherits a dead peer's lock forever.
+Two issues in the same repository can be worked at the same time, so the dev pipeline uses a lock to make them take turns whenever they touch git. While an agent waits for CI, it gives the lock back, so one issue's ten-minute CI run doesn't hold up the other. The only real decision was how long to wait to get the lock back. Too short, and a healthy session working on another issue makes this one fail. No limit, and a session that crashed while holding the lock blocks the repository forever. I settled on about an hour.
 
 ## The checkpoint is a file, and it is written by rename
 
