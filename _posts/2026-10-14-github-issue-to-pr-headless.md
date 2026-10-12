@@ -13,7 +13,7 @@ comments: false
 
 Part 2 of five on running an AI agent fleet. [Part 1](/2026/10/agent-fleet-two-lanes.html) covered the two lanes and why each one fails differently.
 
-This post is the lane where nobody watches a terminal. An issue gets assigned on GitHub, and some time later a pull request appears with tests and a description. Nobody watched a terminal for any of it.
+This post is the lane where nobody watches a terminal. An issue gets assigned on GitHub, and some time later a pull request appears with tests and a description. Nobody watched a terminal for any of it. If a decision is needed, the agent escalates a question to me, the human in the loop, and once I answer, the work continues from that decision.
 
 The daemon is [ctrlrelay](https://github.com/AInvirion/ctrlrelay), Apache 2.0, currently 0.12.2. It is mine, it is public, and most of what follows is in its changelog, which is where I keep the reasons rather than the features.
 
