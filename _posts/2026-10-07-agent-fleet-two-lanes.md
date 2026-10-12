@@ -27,7 +27,7 @@ Here’s my hardware setup right now, four machines:
 
 - Linux laptop 4 GB RAM (SSH access to other nodes, fleet coordination, and 3 of the agent sessions)
 - MacBook Pro M4 Pro 24 GB RAM (coding, UI/CX testing, iOS/Apple development, model fingerprinting, Software Composition Analysis)
-- MacBook Pro M1 Max 64 GB RAM (the fleet's Ollama host: serves local models to every other machine over the LAN, and runs nothing else)
+- MacBook Pro M1 Max 64 GB RAM (the fleet's Ollama host: serves local models to every other machine over the LAN, and takes work from the coordinator when needed)
 - Linux PC 32 GB RAM / RTX 5060 8 GB VRAM (local models, GitHub Actions, security analysis, software testing)
 
 ## The models
